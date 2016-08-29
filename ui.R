@@ -9,9 +9,10 @@ df.comps = read_csv("data-comps.csv", col_names = TRUE)
 
 
 shinyUI(fluidPage(
-
+theme = "flatly.css", #Add the css theme
   # Application title
   titlePanel("Cost of Treatment Calculator"),
+  tags$hr(), #Horizontal line to separate the page header
   
   sidebarLayout(sidebarPanel(
     # textInput(inputId = "name", label = "Name of component:", placeholder = "e.g., parent training"),
@@ -31,12 +32,14 @@ shinyUI(fluidPage(
     actionButton(inputId = "add", label = "Add protocol component.")
   ),
 mainPanel(
-  textOutput("list.of.components"),
+  tags$body(
+    tags$style("body {background-color: #badede; }"), #Set background color for the main panel
+  tags$h4(textOutput("list.of.components")),
   # textOutput("total.cost.explicit"),
   # textOutput("total.cost.implicit"),
   # textOutput("total.cost.combined"),
   textOutput("test"),
-  textOutput("cost.meds")
+  tags$h5(textOutput("cost.meds"))
 ))
 
 ))
