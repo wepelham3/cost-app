@@ -10,7 +10,7 @@ df.comps = read_csv("data-comps.csv", col_names = TRUE)
 
 shinyServer(function(input, output) {
   
-  observeEvent(input$add, {
+  observeEvent(input$add_med, {
     save.string = paste0("--- ",
                          input$med, ", ",
                          input$sched.times, "x daily, ",
@@ -19,6 +19,18 @@ shinyServer(function(input, output) {
     output$test = renderText({
       print(save.string)
     })
+  })
+  
+  observeEvent(input$add_ind, {
+  output$indiv_treatment = renderText({
+    paste("Individual treatment: ", input$professional, " | frequency = ", input$frequency_in, " times per year | duration = ",  input$duration_indiv, " min")
+  })
+  })
+  
+  observeEvent(input$add_gr, {
+  output$group_treatment = renderText({
+    paste("Group treatment: ", input$group_leader, " | frequency = ", input$frequency_gr, " times per year | duration = ",  input$duration_group, " min")
+  })
   })
   
   output$list.of.components = renderText({
