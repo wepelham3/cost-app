@@ -32,8 +32,8 @@ shinyUI(fluidPage(
         title = "Add Individual Treatment",
         shinyjs::disabled(textInput("id.ind", "Id", "0")),
         textInput(inputId = "label.ind", label = "Label:"),
-        sliderInput(inputId = "frequency.ind", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
-        textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
+        textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = "0"),
+        textInput(inputId = "duration.ind", label = "Duration of each session (in minutes):", value = "0"),
         selectInput(inputId ="num.persons.ind", "Number of Persons", choices = seq(1,5,1)),
         uiOutput("persons.ind"),
         uiOutput("persons.comm.ind"),
@@ -45,8 +45,8 @@ shinyUI(fluidPage(
       tabPanel(
         title = "Add Group Treatment",
         textInput(inputId = "label.gr", label = "Label:"),
-        sliderInput(inputId = "frequency.gr", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
-        textInput(inputId = "duration.gr", label = "Duration (in minutes):", value = "0"),
+        textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = "0"),
+        textInput(inputId = "duration.gr", label = "Duration of each session (in minutes):", value = "0"),
         selectInput(inputId = "person1.gr", label = "Person 1:", choices = df.comps$person),
         radioButtons(
           "p1.gr.yn",
