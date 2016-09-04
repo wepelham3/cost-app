@@ -47,15 +47,15 @@ shinyUI(fluidPage(
         textInput(inputId = "label.gr", label = "Label:"),
         textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = "0"),
         textInput(inputId = "duration.gr", label = "Duration of each session (in minutes):", value = "0"),
-        selectInput(inputId = "person1.gr", label = "Person 1:", choices = df.comps$person),
+        selectInput(inputId = "person1.gr", label = "Person #1:", choices = df.comps$person),
         radioButtons(
           "p1.gr.yn",
-          label = tags$h5("Is this person commuting to the session?"), choices = c("Yes", "No"), selected = NULL
+          label = tags$h5("Is person #1 commuting to the session?"), choices = c("Yes", "No"), selected = "No", inline = TRUE
         ),
-        selectInput(inputId = "person2.gr", label = "Person 2:", choices = df.comps$person),
+        selectInput(inputId = "person2.gr", label = "Person #2:", choices = df.comps$person),
         radioButtons(
           "p2.gr.yn",
-          label = tags$h5("Is this person commuting to the session?"), choices = c("Yes", "No"), selected = NULL
+          label = tags$h5("Is person #2 commuting to the session?"), choices = c("Yes", "No"), selected = "No", inline = TRUE
         ),
         actionButton(inputId = "add.gr", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
         actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
