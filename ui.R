@@ -37,8 +37,8 @@ shinyUI(fluidPage(
         selectInput(inputId ="num.persons.ind", "Number of Persons", choices = seq(1,5,1)),
         uiOutput("persons.ind"),
         uiOutput("persons.comm.ind"),
-        actionButton(inputId = "add.ind", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "add.ind", tags$a(href= NULL, class = "btn btn-primary", "Add this component as specified")),
+        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "del.ind", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
@@ -57,8 +57,8 @@ shinyUI(fluidPage(
           "p2.gr.yn",
           label = tags$h5("Is person #2 commuting to the session?"), choices = c("Yes", "No"), selected = "No", inline = TRUE
         ),
-        actionButton(inputId = "add.gr", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "add.gr", tags$a(href= NULL, class = "btn btn-primary", "Add this component as specified")),
+        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "del.gr", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
@@ -73,8 +73,8 @@ shinyUI(fluidPage(
                    choices = c("Everyday", "Weekdays only", "Weekends only")),
         selectInput(inputId = "sched.yearly", label = "Yearly schedule:",
                    choices = c("Year-round", "School year only", "Summer only")),
-        actionButton(inputId = "add.med", tags$a(href= NULL, class = "btn btn-primary", "Add Medication")),
-        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "add.med", tags$a(href= NULL, class = "btn btn-primary", "Add this medication as specified")),
+        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "del.med", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
         
