@@ -38,7 +38,7 @@ shinyUI(fluidPage(
         uiOutput("persons.ind"),
         uiOutput("persons.comm.ind"),
         actionButton(inputId = "add.ind", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "new.ind", tags$a(href= NULL, class = "btn btn-primary", "New")),
+        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
         actionButton(inputId = "del.ind", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
@@ -58,7 +58,7 @@ shinyUI(fluidPage(
           label = tags$h5("Is this person commuting to the session?"), choices = c("Yes", "No"), selected = NULL
         ),
         actionButton(inputId = "add.gr", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "new.gr", tags$a(href= NULL, class = "btn btn-primary", "New")),
+        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
         actionButton(inputId = "del.gr", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
@@ -72,7 +72,7 @@ shinyUI(fluidPage(
         selectInput(inputId = "sched.yearly", label = "Yearly schedule:",
                    choices = c("Year-round", "School year only", "Summer only")),
         actionButton(inputId = "add.med", tags$a(href= NULL, class = "btn btn-primary", "Add Medication")),
-        actionButton(inputId = "new.med", tags$a(href= NULL, class = "btn btn-primary", "New")),
+        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
         actionButton(inputId = "del.med", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
         

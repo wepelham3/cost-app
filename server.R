@@ -149,7 +149,7 @@ shinyServer(function(input, output, session) {
   # }, priority = 1)
   
   # Press "New" button -> display empty record for IndivTreatment
-  observeEvent(input$new.ind, {
+  observeEvent(input$reset.ind, {
     UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
   })
   
