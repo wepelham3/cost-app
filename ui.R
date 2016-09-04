@@ -22,12 +22,14 @@ shinyUI(fluidPage(
   tags$hr(),
   
   sidebarLayout(sidebarPanel(
+    
+    h3(em("Click one of the tabs below to add a component to the treatment protocol...")),
   
     tabsetPanel( type ="pills", 
                  
     
     tabPanel(
-        title = "Individual Treatment",
+        title = "Add Individual Treatment",
         shinyjs::disabled(textInput("id.ind", "Id", "0")),
         textInput(inputId = "label.ind", label = "Label:"),
         sliderInput(inputId = "frequency.ind", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
@@ -41,7 +43,7 @@ shinyUI(fluidPage(
       
       ),
       tabPanel(
-        title = "Group Treatment",
+        title = "Add Group Treatment",
         textInput(inputId = "label.gr", label = "Label:"),
         sliderInput(inputId = "frequency.gr", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
         textInput(inputId = "duration.gr", label = "Duration (in minutes):", value = "0"),
@@ -61,7 +63,7 @@ shinyUI(fluidPage(
       
       ),
       tabPanel(
-        title = "Medication",
+        title = "Add Medication",
         selectInput(inputId = "med", label = "Medication:", choices = df.meds$name),
         selectInput(inputId = "sched.times", label = "Pills taken per day:",
                     choices = c(1, 2, 3)),
