@@ -64,7 +64,9 @@ shinyUI(fluidPage(
       ),
       tabPanel(
         title = "Add Medication",
-        selectInput(inputId = "med", label = "Medication:", choices = df.meds$name),
+        selectizeInput(inputId = "med", label = "Medication:", choices = df.meds$name,
+                       options = list(placeholder = "Choose a medication from the list.",
+                                      onInitialize = I('function() { this.setValue(""); }'))),
         selectInput(inputId = "sched.times", label = "Pills taken per day:",
                     choices = c(1, 2, 3)),
         selectInput(inputId = "sched.weekly", label = "Weekly schedule:",
