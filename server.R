@@ -2,227 +2,150 @@ library(shiny)
 library(magrittr)
 library(readr)
 library(DT)
+library(shinyjs)
 
-df.meds = read_csv("data-meds.csv", col_names = TRUE)
-df.comps = read_csv("data-comps.csv", col_names = TRUE)
+#df.meds = read_csv("data-meds.csv", col_names = TRUE)
+#df.comps = read_csv("data-comps.csv", col_names = TRUE)
 
-# --------------------------------------------------------------------
-
-# CRUD Functions for Individual Treatments
-
-# Get table metadata
-GetTableMetadataIndivTreatment <- function() {
-  fields <- c(id.ind = "Id", 
-              label.ind = "Label", 
-              frequency.ind = "Frequency", 
-              duration.ind = "Duration",
-              num.persons.ind = "Num Persons")
-  result <- list(fields = fields)
-  return (result)
-}
-
-# Find the next ID of a new record
-# (in mysql, this could be done by an incremental index)
-GetNextIdIndivTreatment <- function() {
-  if (exists("responsesIndivTreatment") && nrow(responsesIndivTreatment) > 0) {
-    max(as.integer(rownames(responsesIndivTreatment))) + 1
-  } else {
-    return (1)
-  }
-}
-
-#C - CREATE
-CreateDataIndivTreatment <- function(data) {
-  
-  data <- CastDataIndivTreatment(data)
-  rownames(data) <- GetNextIdIndivTreatment()
-  if (exists("responsesIndivTreatment")) {
-    responsesIndivTreatment <<- rbind(responsesIndivTreatment, data)
-  } else {
-    responsesIndivTreatment <<- data
-  }
-}
-
-#R - READ
-ReadDataIndivTreatment <- function() {
-  if (exists("responsesIndivTreatment")) {
-    responsesIndivTreatment
-  }
-}
-
-#U - UPDATE
-UpdateDataIndivTreatment <- function(data) {
-  data <- CastDataIndivTreatment(data)
-  responsesIndivTreatment[row.names(responsesIndivTreatment) == row.names(data), ] <<- data
-}
-
-#D - DELETE
-DeleteData <- function(data) {
-  responsesIndivTreatment <<- responses[row.names(responsesIndivTreatment) != unname(data["id_ind"]), ]
-}
-
-# Return an empty, new record
-CreateDefaultIndivTreatment <- function() {
-  default.indiv.treatment <- CastDataIndivTreatment(list(id.ind = "0", label.ind = "", frequency.ind = 0, duration.ind = 0, num.persons.ind = 1))
-  #mydefault <- CastData(list(id = "0", name = "", used_shiny = FALSE, r_num_years = 2))
-  return (default.indiv.treatment)
-}
-
-# Cast from Inputs to a one-row data.frame
-CastDataIndivTreatment <- function(data) {
-  datar <- data.frame(label.ind = data["label.ind"], 
-                      frequency.ind = as.integer(data["frequency.ind"]),
-                      duration.ind = as.integer(data["duration.ind"]),
-                      num.persons.ind = as.integer(data["num.persons.ind"]),
-                      stringsAsFactors = FALSE)
-  rownames(datar) <- data["id.ind"]
-  return (datar)
-}
-
-# Fill the input fields with the values of the selected record in the table
-UpdateInputsIndivTreatment <- function(data, session) {
-  updateTextInput(session, "id.ind", value = unname(rownames(data)))
-  updateTextInput(session, "label.ind", value = unname(data["label.ind"]))
-  updateSliderInput(session, "frequency.ind", value = as.integer(data["frequency.ind"]))
-  updateTextInput(session, "duration.ind", value = as.integer(data["duration.ind"]))
-  updateTextInput(session, "num.persons.ind", value = as.integer(data["num.persons.ind"]))
-}  
-  
 
 shinyServer(function(input, output, session) {
   
-  values <- reactiveValues()
-  #values$df.indiv.treatment <- data.frame(Label = character(0), Frequency = character(0), Duration = numeric(0), stringsAsFactors=FALSE)
-  values$df.persons.ind <- data.frame(Person = character(0), Price = numeric(0), Commuting = character(0), stringsAsFactors=FALSE)
+  #use shiny js 
+  shinyjs::useShinyjs()
   
+ # values <- reactiveValues()
+ # values$df.indiv.treatment <- data.frame(Label = character(0), Frequency = character(0), Duration = numeric(0), stringsAsFactors=FALSE)
+ # values$df.persons.ind <- data.frame(Person = character(0), Price = numeric(0), Commuting = character(0), stringsAsFactors=FALSE)
+ # values$num.persons.ind <- as.integer(input$"num.persons.ind")  
+  
+ # uncomment for debugging: send all Input Values to the interface
+  
+ #  output$inputvals<-renderTable({
+ #    as.data.frame(reactiveValuesToList(input))
+ #  })
+
+
+
   # Individual Treatments CRUD
   
   # Indiv. Treatment input fields are treated as a group
-
+  
   formDataIndivTreatment <- reactive({
     sapply(names(GetTableMetadataIndivTreatment()$fields), function(x) input[[x]])
   })
   
-  # Dynamically Rendering the input controls for the Individual Treatments's persons
   
-  output$persons.ind <- renderUI({
-    num.persons.ind <- as.integer(input$"num.persons.ind");
-    
-    lapply(1:num.persons.ind, function(i) {
-      
-      selectInput(inputId = paste0("person", i, ".ind"), label = paste0("Person ", i), choices = df.comps$person);
-      
-    })
-  })
+ # uncommment for debugging
+ #  output$mytable1<-renderTable({
+ #    as.data.frame(formDataIndivTreatment())
+ #})
+ 
+ #  output$mytable2<-renderTable({ 
+ #   as.data.frame(ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ])
+ #  })
+ ####################
   
-  output$persons.comm.ind <- renderUI({
-    num.persons.ind <- as.integer(input$"num.persons.ind");
-    
-    lapply(1:num.persons.ind, function(i) {
-      
-      radioButtons(
-        paste0("p", i, ".ind.yn"),
-        label = tags$h5(paste0("Is the person ", i, " commuting to the session?")), choices = c("Yes", "No"), selected = NULL
-      )
-    })
-  })
   
-  # Processing Events for IndivTreatment
-  # Click "Add Component" button -> save data
-  observeEvent(input$add.ind, {
-    if (input$add.ind == "0") {
-      return ()
-    } else {
-      CreateDataIndivTreatment(formDataIndivTreatment())
-      UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
-    }
-  }, priority = 1)
-  
-  # Click "Add Component" button -> save data
-  # observeEvent(input$add.ind, {
-  #   if (input$add.ind != "0") {
-  #     UpdateDataIndivTreatment(formDataIndivTreatment())
-  #   } else {
-  #     CreateDataIndivTreatment(formDataIndivTreatment())
-  #     UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
-  #   }
-  # }, priority = 1)
-  
-  # Press "New" button -> display empty record for IndivTreatment
-  observeEvent(input$new.ind, {
-    UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
-  })
-  
+  # The "Label" field is mandatory and thus the "Submit" button should not be enabled if there is no name
+  # Define here rulese for mandatory fields 
+  # more examples at http://deanattali.com/2015/04/23/shinyjs-r-package/
   observe({
-    if (input$add.ind == 0)
-      return()
-    isolate({
-     # Your logic here
-        output$indiv.treatment = renderText({
-        paste("Individual treatment: ", input$label.ind, " | frequency = ", input$frequency.ind, " times per year | duration = ",  input$duration.ind, " min")
-        })
-        num.persons.ind <- as.integer(input$"num.persons.ind");
-        #newLine <- isolate(c(as.character(input$person1.ind), as.numeric(df.comps[which(df.comps$person == input$person1.ind), 2]), input$p1.ind.yn))
-        #isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-        #              <- c(input$person1.ind, as.numeric(df.comps[which(df.comps$person == input$person1.ind), 2]), input$p1.ind.yn))
-        newLine <- c(as.character(input$person1.ind), as.numeric(df.comps[which(df.comps$person == input$person1.ind), 2]), input$p1.ind.yn)
-        isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-                <- c(input$person1.ind, as.numeric(df.comps[which(df.comps$person == input$person1.ind), 2]), input$p1.ind.yn))
-        if(num.persons.ind > 1){
-
-             newLine <- c(as.character(input$person2.ind), as.numeric(df.comps[which(df.comps$person == input$person2.ind), 2]), input$p2.ind.yn)
-             isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-                     <- c(input$person2.ind, as.numeric(df.comps[which(df.comps$person == input$person2.ind), 2]), input$p2.ind.yn))
-
-         }
-
-          if(num.persons.ind > 2){
-
-            newLine <- c(as.character(input$person3.ind), as.numeric(df.comps[which(df.comps$person == input$person3.ind), 2]), input$p3.ind.yn)
-            isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-                    <- c(input$person3.ind, as.numeric(df.comps[which(df.comps$person == input$person3.ind), 2]), input$p3.ind.yn))
-
-          }
-
-          if(num.persons.ind > 3){
-
-            newLine <- isolatec(as.character(input$person4.ind), as.numeric(df.comps[which(df.comps$person == input$person4.ind), 2]), input$p4.ind.yn)
-            isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-                    <- c(input$person4.ind, as.numeric(df.comps[which(df.comps$person == input$person4.ind), 2]), input$p4.ind.yn))
-
-
-          }
-
-          if(num.persons.ind > 4){
-
-            newLine <- isolatec(as.character(input$person5.ind), as.numeric(df.comps[which(df.comps$person == input$person5.ind), 2]), input$p5.ind.yn)
-            isolate(values$df.persons.ind[nrow(values$df.persons.ind) + 1,]
-                    <- c(input$person5.ind, as.numeric(df.comps[which(df.comps$person == input$person5.ind), 2]), input$p5.ind.yn))
-
-
-          }
-       })
+    if (is.null(input$label.ind) || input$label.ind == "") {
+      shinyjs::disable("submit.ind")
+    } else {
+      shinyjs::enable("submit.ind")
+    }
+    
+    if (input$id.ind == 0) {
+      shinyjs::disable("delete.ind")
+    } else {
+      shinyjs::enable("delete.ind")
+    }
+    
   })
- 
-  #observeEvent(input$add.ind, {
-  #   output$indiv.treatment = renderText({
-  #    paste("Individual treatment: ", input$label.ind, " | frequency = ", input$frequency.ind, " times per year | duration = ",  input$duration.ind, " min")
-  #})
-  #}) # close observeEvent(input$add.ind)
+  
+  # Show/Hide Persons
+  shinyjs::onclick("add.person2.ind",
+                   shinyjs::toggle(id = "p2.ind", anim = TRUE))
+  
+  # Add the Person 3
+  shinyjs::onclick("add.person3.ind",
+                   shinyjs::toggle(id = "p3.ind", anim = TRUE))
+  
+  # Add the Person 4
+  shinyjs::onclick("add.person4.ind",
+                   shinyjs::toggle(id = "p4.ind", anim = TRUE))
+  
+  # Add the Person 5
+  shinyjs::onclick("add.person5.ind",
+                   shinyjs::toggle(id = "p5.ind", anim = TRUE))
   
   
- output$table.persons.ind <- renderTable({values$df.persons.ind})
- 
- # display table
- output$responsesIndivTreatment <- DT::renderDataTable({
+  # Click "Submit" button to save the data
+   observeEvent(input$submit.ind, {
+     if (input$id.ind != "0") {
+       UpdateDataIndivTreatment(formDataIndivTreatment(), session)
+     } else { #new record
+       CreateDataIndivTreatment(formDataIndivTreatment())
+       UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
+     }
+   }, priority = 1)
+  
+  
+  # Select row in table -> show details in inputs
+  observeEvent(input$data.table.ind.treatment_rows_selected, {
+    if (length(input$data.table.ind.treatment_rows_selected) > 0) {
+      data <- ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ]
+      UpdateInputsIndivTreatment(data, session)
+    
+      if (data["person2.ind"] != "None" )
+        shinyjs::show(id = "p2.ind", anim = TRUE)
+       else
+        shinyjs::hide(id = "p2.ind", anim = TRUE) 
+      
+      if (data["person3.ind"] != "None" )
+        shinyjs::show(id = "p3.ind", anim = TRUE)
+      else
+        shinyjs::hide(id = "p3.ind", anim = TRUE) 
+      
+      if (data["person4.ind"] != "None" )
+        shinyjs::show(id = "p4.ind", anim = TRUE)
+      else
+        shinyjs::hide(id = "p4.ind", anim = TRUE) 
+      
+      if (data["person5.ind"] != "None" )
+        shinyjs::show(id = "p5.ind", anim = TRUE)
+      else
+        shinyjs::hide(id = "p5.ind", anim = TRUE) 
+      
+    }
+  })
+    
+  # Press "Delete" button -> delete from data
+  observeEvent(input$delete.ind, {
+    DeleteDataIndivTreatment(formDataIndivTreatment())
+    UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
+  }, priority = 1)
+   
+  # Press "Reset" button -> display empty record for IndivTreatment
+  observeEvent(input$reset.ind, {
+    UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
+    shinyjs::hide(id = "p2.ind", anim = TRUE)
+    shinyjs::hide(id = "p3.ind", anim = TRUE)
+    shinyjs::hide(id = "p4.ind", anim = TRUE)
+    shinyjs::hide(id = "p5.ind", anim = TRUE)
+  })
+  
+  # Display the Data Table
+  output$data.table.ind.treatment <- DT::renderDataTable({
    #update after submit is clicked
-  input$add.ind
+  input$submit.ind
    #update after delete is clicked
-  #input$delete
+  input$delete.ind
    ReadDataIndivTreatment()
  }, server = FALSE, selection = "single", 
  colnames = unname(GetTableMetadataIndivTreatment()$fields)[-1]
- , options = list(sDom  = '<"top">rt<"bottom">ip') # to suppress search box
+ , options = list(sDom  = '<"top">flrt<"bottom">ip)') # to suppress search box
  # <"top">flrt<"bottom">ip - The syntax is a bit quirky, but basically the above says that f, l, r and t options
  # are to be placed in the top div with the i and p options in the bottom div. 
  #Please refer to the docs at http://legacy.datatables.net/usage/options for a more thorough explanation.
@@ -232,10 +155,41 @@ shinyServer(function(input, output, session) {
  
  )     
  
+  
+  # It was before: Dynamically Rendering the input controls for the Individual Treatments's persons
+  
+  #  output$persons.ind <- renderUI({
+  
+  #    num.persons.ind <- as.integer(input$"num.persons.ind");
+  
+  #    lapply(1:num.persons.ind, function(i) {
+  
+  #      selectInput(inputId = paste0("person", i, ".ind"), label = paste0("Person ", i), choices = df.comps$person);
+  
+  #    })
+  #  })
+  
+  #  output$persons.comm.ind <- renderUI({
+  #    num.persons.ind <- as.integer(input$"num.persons.ind");
+  
+  #    lapply(1:num.persons.ind, function(i) {
+  
+  #      textInput(inputId = paste0("p", i, ".comm.ind"), label = paste0("Person ", i, " Commute, one-way (min)" ), value = "20");
+  
+  # radioButtons(
+  #  paste0("p", i, ".ind.yn"),
+  #   label = tags$h5(paste0("Is the person ", i, " commuting to the session?")), choices = c("Yes", "No"), selected = NULL
+  
+  #    })
+  #  })
+  
+  
+  
+  
  # Sending Outputs to the interface
- output$list.of.components = renderText({
-   print("Protocol Components:")
- })
+# output$list.of.components = renderText({
+#   print("Protocol Components:")
+# })
 
  # output$people.ind = renderUI ({
  #      str1 <- paste("Person 1: ", input$person1.ind, " | Price: ", as.numeric(df.comps[which(df.comps$person == input$person1.ind), 2]) , " | Commuting: ", input$p1.ind.yn)
@@ -250,44 +204,52 @@ shinyServer(function(input, output, session) {
   #  })
   #})
   
-  output$cost.indiv.treatments = renderText({
+ # output$cost.indiv.treatments = renderText({
+ #  
+ #  })
   
-  })
+  # --------------------------------------------------------------------
+  #group dynamic code
+  # --------------------------------------------------------------------
   
-  observeEvent(input$add.gr, {
+#  observeEvent(input$add.gr, {
+#    
+#    output$group.treatment = renderText({
+#      paste("Group treatment: ", input$label.gr, " | frequency = ", input$frequency.gr, " times per year | duration = ",  input$duration.gr, " min")
+#    })
+#  
+#    output$people.gr = renderUI ({
+#      str1 <- paste("Person 1: ", input$person1.gr, " | Price: ", as.numeric(df.comps[which(df.comps$person == input$person1.gr), 2]) , " | Commuting: ", input$p1.gr.yn)
+#      str2 <- paste("Person 2: ", input$person2.gr, " | Price: ", as.numeric(df.comps[which(df.comps$person == input$person2.gr), 2]) , " | Commuting: ", input$p2.gr.yn)
+#      HTML(paste(str1, str2, sep ='<br>'))
+#    })
+#  })
+  
+#  output$cost.group.treatments = renderText({
     
-    output$group.treatment = renderText({
-      paste("Group treatment: ", input$label.gr, " | frequency = ", input$frequency.gr, " times per year | duration = ",  input$duration.gr, " min")
-    })
-  
-    output$people.gr = renderUI ({
-      str1 <- paste("Person 1: ", input$person1.gr, " | Price: ", as.numeric(df.comps[which(df.comps$person == input$person1.gr), 2]) , " | Commuting: ", input$p1.gr.yn)
-      str2 <- paste("Person 2: ", input$person2.gr, " | Price: ", as.numeric(df.comps[which(df.comps$person == input$person2.gr), 2]) , " | Commuting: ", input$p2.gr.yn)
-      HTML(paste(str1, str2, sep ='<br>'))
-    })
-  })
-  
-  output$cost.group.treatments = renderText({
-    
-  })
-  
 
-  observeEvent(input$add.med, {
-    save.string = paste0("--- ",
-                         input$med, ", ",
-                         input$sched.times, "x daily, ",
-                         input$sched.weekly, ", ",
-                         input$sched.yearly,
-                          " | Price: ", as.numeric(df.meds[which(df.meds$name == input$med), 2]))
-    output$med = renderText({
-      print(save.string)
-    })
-  })
+#  })
   
-  output$cost.meds = renderText({
+  # --------------------------------------------------------------------
+  #meds dynamic code
+  # --------------------------------------------------------------------
+
+#  observeEvent(input$add.med, {
+#    save.string = paste0("--- ",
+#                         input$med, ", ",
+#                         input$sched.times, "x daily, ",
+#                         input$sched.weekly, ", ",
+#                         input$sched.yearly,
+#                          " | Price: ", as.numeric(df.meds[which(df.meds$name == input$med), 2]))
+#    output$med = renderText({
+#      print(save.string)
+#    })
+#  })
+  
+#  output$cost.meds = renderText({
   
   
-  })
+#  })
   
   # output$total.cost.explicit = renderText({
   #   (input$frequency * input$duration * 10) %>%

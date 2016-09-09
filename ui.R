@@ -12,7 +12,7 @@ options(shiny.trace=TRUE)
 
 shinyUI(fluidPage(
   
-  #use shiny js to disable the ID fields
+  #use shiny js 
   shinyjs::useShinyjs(),
   
   theme = "flatly.css",
@@ -28,16 +28,72 @@ shinyUI(fluidPage(
     
     tabPanel(
         title = "Individual Treatment",
-        shinyjs::disabled(textInput("id.ind", "Id", "0")),
+        shinyjs::hidden(textInput("id.ind", "Id", "0")),
+        #shinyjs::disabled(textInput("id.ind", "Id", "0")),
         textInput(inputId = "label.ind", label = "Label:"),
         sliderInput(inputId = "frequency.ind", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
         textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
-        selectInput(inputId ="num.persons.ind", "Number of Persons", choices = seq(1,5,1)),
-        uiOutput("persons.ind"),
-        uiOutput("persons.comm.ind"),
-        actionButton(inputId = "add.ind", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "new.ind", tags$a(href= NULL, class = "btn btn-primary", "New")),
-        actionButton(inputId = "del.ind", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
+      # it was before  
+      #  selectInput(inputId ="num.persons.ind", "Number of Persons", choices = seq(1,5,1)),
+      #  uiOutput("persons.ind"),
+      #  uiOutput("persons.comm.ind"),
+      
+         div(id = "p1.ind",
+           selectInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person),
+           textInput(inputId = "p1.comm.ind", label = "Person 1 Commute Time (one-way in min)", value = "0"),
+           a(id = "add.person2.ind", "Show/Hide Person 2"),
+           tags$br(),
+           tags$br()
+          ),
+        
+       # a(id = "add.person1.ind", "Add Person"),
+        
+        #actionButton(inputId = "add.person.ind", tags$a(href= NULL, class = "btn btn-primary", "Add Person")),
+        
+        
+        shinyjs::hidden(
+         div(id = "p2.ind",
+          selectInput(inputId = paste0("person", 2, ".ind"), label = paste0("Person ", 2), choices = df.comps$person),
+          textInput(inputId = paste0("p", 2, ".comm.ind"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
+          a(id = "add.person3.ind", "Show/Hide Person 3"),
+          tags$br(),
+          tags$br()
+         )
+        ),
+        
+        shinyjs::hidden(
+          div(id = "p3.ind",
+              selectInput(inputId = paste0("person", 3, ".ind"), label = paste0("Person ", 3), choices = df.comps$person),
+              textInput(inputId = paste0("p", 3, ".comm.ind"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
+              a(id = "add.person4.ind", "Show/Hide Person 4"),
+              tags$br(),
+              tags$br()
+          )
+        ),
+        
+        shinyjs::hidden(
+          div(id = "p4.ind",
+              selectInput(inputId = paste0("person", 4, ".ind"), label = paste0("Person ", 4), choices = df.comps$person),
+              textInput(inputId = paste0("p", 4, ".comm.ind"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
+              a(id = "add.person5.ind", "Show/Hide Person 5"),
+              tags$br(),
+              tags$br()
+          )
+        ),
+        
+        shinyjs::hidden(
+          div(id = "p5.ind",
+              selectInput(inputId = paste0("person", 5, ".ind"), label = paste0("Person ", 5), choices = df.comps$person),
+              textInput(inputId = paste0("p", 5, ".comm.ind"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
+            #  a(id = "add.person4.ind", "Add Person"),
+            tags$br(),
+            tags$br()
+          )
+        ),
+        
+        actionButton(inputId = "submit.ind", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
+        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "delete.ind", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
       tabPanel(
@@ -91,21 +147,30 @@ mainPanel(
   #data table
   
   # simple format
-  tableOutput("table.persons.ind"),
+  # tableOutput("table.persons.ind"),
+  # dataTableOutput("mytable1")),
+ 
+  # Uncomment for debugging
+  # tableOutput("inputvals"),
+  # tableOutput("mytable1"),
+  #  tableOutput("mytable2"),
   
-  DT::dataTableOutput("responsesIndivTreatment", width = 400), 
+  DT::dataTableOutput("data.table.ind.treatment", width = 500)
+ 
+# tags$h5(textOutput("cost.indiv.treatments")),
+ #
+ 
+ # tags$h5(textOutput("group.treatment")),
+ # tags$h5(htmlOutput("people.gr")),
+ # tags$h5(textOutput("cost.group.treatments")),
   
-  tags$h5(textOutput("cost.indiv.treatments")),
+ # tags$h5(textOutput("med")),
+ # tags$h5(textOutput("cost.meds")),
   
-  tags$h5(textOutput("group.treatment")),
-  tags$h5(htmlOutput("people.gr")),
-  tags$h5(textOutput("cost.group.treatments")),
-  
-  
-  tags$h5(textOutput("med")),
-  tags$h5(textOutput("cost.meds"))
-  
-  # tags$h5(textOutput("people_ind")),
-))
+ #  tags$h5(textOutput("people_ind"))
+ 
+ ) # close tags$body
+ ) # close mainPanel
+
 
 )))
