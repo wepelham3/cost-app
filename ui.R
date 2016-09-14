@@ -16,46 +16,61 @@ shinyUI(fluidPage(
   shinyjs::useShinyjs(),
   
   theme = "flatly.css",
+  
+  tags$head(
+    tags$style(HTML("
+      
+      h1 {
+        color: #e6b800;
+      }
+
+    "))
+  ),
 
   # Application title
   titlePanel(tags$h1("Cost of Treatment Calculator"), windowTitle = "Cost of Treatment Calculator"),
   tags$hr(),
   
   sidebarLayout(sidebarPanel(
+    
+    tags$h4(tags$b("Click one of the tabs below to add a component to the treatment protocol."), style = "color: #4177b7"),
+    
+    tags$style(HTML("
+        .tabs-above > .nav > li[class=active] > a {
+                    font-weight: bold;
+                    background-color: #b38600;
+                    color: #0f1e3e;
+                    }")),
+    
+    tags$style(HTML("
+        .tabs-above > .nav > li > a {
+                    font-weight: bold;
+                    background-color: #f2f2f2;
+                    color: #0f1e3e;
+                    }")),
   
-    tabsetPanel( type ="pills", 
+    tabsetPanel( type ="pills", id = "in.components",
                  
     
     tabPanel(
-        title = "Individual Treatment",
+        title = "Individual Treatment", value = "tab.in",
         shinyjs::hidden(textInput("id.ind", "Id", "0")),
-        #shinyjs::disabled(textInput("id.ind", "Id", "0")),
+        shinyjs::hidden(textInput("cost.ind", "Cost", "0")), #in future try to synchronize
         textInput(inputId = "label.ind", label = "Label:"),
-        sliderInput(inputId = "frequency.ind", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
+        textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
         textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
-      # it was before  
-      #  selectInput(inputId ="num.persons.ind", "Number of Persons", choices = seq(1,5,1)),
-      #  uiOutput("persons.ind"),
-      #  uiOutput("persons.comm.ind"),
-      
-         div(id = "p1.ind",
+        div(id = "p1.ind",
            selectInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person),
            textInput(inputId = "p1.comm.ind", label = "Person 1 Commute Time (one-way in min)", value = "0"),
-           a(id = "add.person2.ind", "Show/Hide Person 2"),
+           a(id = "add.person2.ind", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
            tags$br(),
            tags$br()
           ),
-        
-       # a(id = "add.person1.ind", "Add Person"),
-        
-        #actionButton(inputId = "add.person.ind", tags$a(href= NULL, class = "btn btn-primary", "Add Person")),
-        
-        
         shinyjs::hidden(
          div(id = "p2.ind",
           selectInput(inputId = paste0("person", 2, ".ind"), label = paste0("Person ", 2), choices = df.comps$person),
           textInput(inputId = paste0("p", 2, ".comm.ind"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
-          a(id = "add.person3.ind", "Show/Hide Person 3"),
+          a(id = "add.person3.ind", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
           tags$br(),
           tags$br()
          )
@@ -65,7 +80,7 @@ shinyUI(fluidPage(
           div(id = "p3.ind",
               selectInput(inputId = paste0("person", 3, ".ind"), label = paste0("Person ", 3), choices = df.comps$person),
               textInput(inputId = paste0("p", 3, ".comm.ind"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
-              a(id = "add.person4.ind", "Show/Hide Person 4"),
+              a(id = "add.person4.ind", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
               tags$br(),
               tags$br()
           )
@@ -75,7 +90,7 @@ shinyUI(fluidPage(
           div(id = "p4.ind",
               selectInput(inputId = paste0("person", 4, ".ind"), label = paste0("Person ", 4), choices = df.comps$person),
               textInput(inputId = paste0("p", 4, ".comm.ind"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
-              a(id = "add.person5.ind", "Show/Hide Person 5"),
+              a(id = "add.person5.ind", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
               tags$br(),
               tags$br()
           )
@@ -97,80 +112,146 @@ shinyUI(fluidPage(
       
       ),
       tabPanel(
-        title = "Group Treatment",
+        title = "Group Treatment", value = "tab.gr",
+        shinyjs::hidden(textInput("id.gr", "Id", "0")),
+        shinyjs::hidden(textInput("cost.gr", "Cost", "0")),
         textInput(inputId = "label.gr", label = "Label:"),
-        sliderInput(inputId = "frequency.gr", label = "Frequency per year:", min = 1, max = 10, value = 1, ticks = TRUE, width = 500),
+        textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
         textInput(inputId = "duration.gr", label = "Duration (in minutes):", value = "0"),
-        selectInput(inputId = "person1.gr", label = "Person 1:", choices = df.comps$person),
-        radioButtons(
-          "p1.gr.yn",
-          label = tags$h5("Is this person commuting to the session?"), choices = c("Yes", "No"), selected = NULL
+        textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "0"),
+        
+        div(id = "p1.gr",
+            selectInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person),
+            textInput(inputId = "p1.comm.gr", label = "Person 1 Commute Time (one-way in min)", value = "0"),
+            a(id = "add.person2.gr", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
+            tags$br(),
+            tags$br()
         ),
-        selectInput(inputId = "person2.gr", label = "Person 2:", choices = df.comps$person),
-        radioButtons(
-          "p2.gr.yn",
-          label = tags$h5("Is this person commuting to the session?"), choices = c("Yes", "No"), selected = NULL
+        
+       
+        shinyjs::hidden(
+          div(id = "p2.gr",
+              selectInput(inputId = paste0("person", 2, ".gr"), label = paste0("Person ", 2), choices = df.comps$person),
+              textInput(inputId = paste0("p", 2, ".comm.gr"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
+              a(id = "add.person3.gr", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
+              tags$br(),
+              tags$br()
+          )
+        ), 
+        
+        shinyjs::hidden(
+          div(id = "p3.gr",
+              selectInput(inputId = paste0("person", 3, ".gr"), label = paste0("Person ", 3), choices = df.comps$person),
+              textInput(inputId = paste0("p", 3, ".comm.gr"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
+              a(id = "add.person4.gr", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
+              tags$br(),
+              tags$br()
+          )
         ),
-        actionButton(inputId = "add.gr", tags$a(href= NULL, class = "btn btn-primary", "Add Component")),
-        actionButton(inputId = "new.gr", tags$a(href= NULL, class = "btn btn-primary", "New")),
-        actionButton(inputId = "del.gr", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
-      
+        
+        shinyjs::hidden(
+          div(id = "p4.gr",
+              selectInput(inputId = paste0("person", 4, ".gr"), label = paste0("Person ", 4), choices = df.comps$person),
+              textInput(inputId = paste0("p", 4, ".comm.gr"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
+              a(id = "add.person5.gr", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
+              tags$br(),
+              tags$br()
+          )
+        ),
+        
+        shinyjs::hidden(
+          div(id = "p5.gr",
+              selectInput(inputId = paste0("person", 5, ".gr"), label = paste0("Person ", 5), choices = df.comps$person),
+              textInput(inputId = paste0("p", 5, ".comm.gr"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
+              #  a(id = "add.person4.ind", "Add Person"),
+              tags$br(),
+              tags$br()
+          )
+        ),
+        
+        actionButton(inputId = "submit.gr", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
+        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "delete.gr", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
+        
+     
       ),
       tabPanel(
-        title = "Medication",
-        selectInput(inputId = "med", label = "Medication:", choices = df.meds$name),
-        selectInput(inputId = "sched.times", label = "Pills taken per day:",
+        title = "Medication", value = "tab.med",
+        shinyjs::hidden(textInput("id.med", "Id", "0")),
+        selectInput(inputId = "label.med", label = "Medication:", choices = df.meds$name),
+        selectInput(inputId = "frequency.med", label = "Pills taken per day:",
                     choices = c(1, 2, 3)),
-        selectInput(inputId = "sched.weekly", label = "Weekly schedule:",
+        selectInput(inputId = "week.med", label = "Weekly schedule:",
                    choices = c("Everyday", "Weekdays only", "Weekends only")),
-        selectInput(inputId = "sched.yearly", label = "Yearly schedule:",
+        selectInput(inputId = "year.med", label = "Yearly schedule:",
                    choices = c("Year-round", "School year only", "Summer only")),
-        actionButton(inputId = "add.med", tags$a(href= NULL, class = "btn btn-primary", "Add Medication")),
-        actionButton(inputId = "new.med", tags$a(href= NULL, class = "btn btn-primary", "New")),
-        actionButton(inputId = "del.med", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
+        actionButton(inputId = "submit.med", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
+        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "delete.med", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
       )
     )
 
   ),
 mainPanel(
-  tags$body(
-  tags$style("body {background-color: #badede; }"),
-  tags$h4(textOutput("list.of.components")),
-  # textOutput("total.cost.explicit"),
-  # textOutput("total.cost.implicit"),
-  # textOutput("total.cost.combined"),
-  tags$h5(textOutput("indiv.treatment")),
-  tags$h5(htmlOutput("people.ind")),
+  tabsetPanel(
+    tabPanel( title = "Component Lists",
+      tags$body(
+        tags$div( 
+          tags$style("body {background-color: #0d2e55; }"),
+          tags$h4(textOutput("list.of.components")),
+          tags$h5(textOutput("indiv.treatment")),
+          tags$h5(htmlOutput("people.ind")),
+          tags$h5(textOutput("group.treatment")),
+          tags$h5(htmlOutput("people.gr")),
   
-  #data table
+         # Uncomment for debugging
+         # tableOutput("inputvals")
   
-  # simple format
-  # tableOutput("table.persons.ind"),
-  # dataTableOutput("mytable1")),
+         tabsetPanel(type = "pills", id = "out.components",
+    
+           tabPanel(
+             title = "Individual Treatment", value = "tab.in",
+  
+             # Uncomment for debugging
+             # tableOutput("mytable1"),
+             # tableOutput("mytable2"),
+     
+            style = "color: #4177b7;",
+            DT::dataTableOutput("data.table.ind.treatment", width = 500),
+            downloadButton('download.table.ind.treatment', 'Download')
+     
+           ), # close tabPanel Individual Treatment
+  
+          tabPanel(
+            title = "Group Treatment", value = "tab.gr", 
+            style = "color: #4177b7;",
+            DT::dataTableOutput("data.table.gr.treatment", width = 500),
+            downloadButton('download.table.gr.treatment', 'Download')
+     
+          ), # close tabPanel Group Treatment
  
-  # Uncomment for debugging
-  # tableOutput("inputvals"),
-  # tableOutput("mytable1"),
-  #  tableOutput("mytable2"),
-  
-  DT::dataTableOutput("data.table.ind.treatment", width = 500)
- 
-# tags$h5(textOutput("cost.indiv.treatments")),
- #
- 
- # tags$h5(textOutput("group.treatment")),
- # tags$h5(htmlOutput("people.gr")),
- # tags$h5(textOutput("cost.group.treatments")),
-  
- # tags$h5(textOutput("med")),
- # tags$h5(textOutput("cost.meds")),
-  
- #  tags$h5(textOutput("people_ind"))
- 
- ) # close tags$body
- ) # close mainPanel
+         tabPanel(
+           title = "Medication", value = "tab.med",
+           style = "color: #4177b7;",
+           DT::dataTableOutput("data.table.med", width = 700),
+           downloadButton('download.table.med', 'Download')
+     
+         ) # close tabPanel Medication
+       )  # close tabsetPanel
+     ) # close tags$div
+    ) # close tags$body
+  ), # close Component List tab
+  tabPanel(title = "Summary"
+   # textOutput("total.cost.explicit"),
+   # textOutput("total.cost.implicit"),
+   # textOutput("total.cost.combined"),       
+   # data table -  simple format
+   # tableOutput("table.persons.ind"),      
+  ) # close Summary tab
+ ) # close tabsetPanel
+) # close mainPanel
 
 
 )))
