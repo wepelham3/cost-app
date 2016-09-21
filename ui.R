@@ -178,6 +178,7 @@ shinyUI(fluidPage(
       tabPanel(
         title = "Medication", value = "tab.med",
         shinyjs::hidden(textInput("id.med", "Id", "0")),
+        shinyjs::hidden(textInput("cost.med", "Cost", "0")),
         selectInput(inputId = "label.med", label = "Medication:", choices = df.meds$name),
         selectInput(inputId = "frequency.med", label = "Pills taken per day:",
                     choices = c(1, 2, 3)),

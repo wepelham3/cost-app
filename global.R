@@ -45,6 +45,8 @@ GetNextIdIndivTreatment <- function() {
   }
 }
 
+
+
 # Cast from Inputs to a one-row data.frame
 CastDataIndivTreatment <- function(data, num.persons.ind = 5) {
   datar <- data.frame(  cost.ind = CalculateCostIndivTreatment(data, num.persons.ind)
@@ -271,7 +273,6 @@ DeleteDataGroupTreatment <- function(data) {
   
 }
 
-
 # Return an empty, new record
 CreateDefaultGroupTreatment <- function() {
   default.group.treatment <- CastDataGroupTreatment(
@@ -338,6 +339,7 @@ UpdateInputsGroupTreatment <- function(data, session, num.persons.gr = 5) {
 # Get table metadata
 GetTableMetadataMedication <- function() {
   fields <- c(  id.med = "Id" 
+                , cost.med ="Cost"
                 , label.med = "Label" 
                 , frequency.med = "Freq/Year" 
                 , week.med = "Weekly Schedule"
@@ -362,7 +364,8 @@ GetNextIdMedication <- function() {
 
 # Cast from Inputs to a one-row data.frame
 CastDataMedication <- function(data) {
-  datar <- data.frame(  label.med = data["label.med"] 
+  datar <- data.frame(  cost.med = CalculateCostMedication(data)
+                        , label.med = data["label.med"] 
                         , frequency.med = as.integer(data["frequency.med"])
                         , week.med = data["week.med"]
                         , year.med = data["year.med"]
@@ -409,22 +412,20 @@ DeleteDataMedication <- function(data) {
   
 }
 
-
 # Return an empty, new record
 CreateDefaultMedication <- function() {
   default.medication <- CastDataMedication(
-    list(id.med = "0", label.med = "", frequency.med = "0", week.med = "", year.med = ""
-          
-    )
-  ) 
+    list(id.med = "0", cost.med = 0, label.med = "", frequency.med = "0", week.med = "", year.med = ""))
   
   return (default.medication)
 }
+
 
 # Fill the input fields with the values of the selected record in the table
 UpdateInputsMedication <- function(data, session) {
  
   updateTextInput(session, "id.med", value = unname(rownames(data)))
+  updateTextInput(session, "cost.med", value = CalculateCostMedication(data))
   updateTextInput(session, "label.med", value = unname(data["label.med"]))
   updateSliderInput(session, "frequency.med", value = as.integer(data["frequency.med"]))
   updateTextInput(session, "week.med", value = unname(data["week.med"]))
@@ -439,12 +440,7 @@ GetProfessionalPrice <- function(person){
   
   price <- as.numeric(df.comps[which(df.comps$person == person), 2])
   
-  return (price)  
-}
-
-GetMedicationPrice <- function(medication){
-  
-  price <- as.numeric(df.meds[which(df.meds$name == medication), 2])
+  if (is.null(price) || is.na(price)) price <- 0
   
   return (price)  
 }
@@ -461,7 +457,7 @@ CalculateCostIndivTreatment <- function(data, num.persons.ind = 5) {
     
   }
   
-  cost <- round(as.integer(data["frequency.ind"])  * prof.prices, 0)
+  cost <- round(as.integer(data["frequency.ind"])  * prof.prices, 2)
   
   
   return (cost)
@@ -479,19 +475,57 @@ CalculateCostGroupTreatment <- function(data, num.persons.gr = 5) {
     
   }
   
-  cost <- round((as.integer(data["frequency.gr"])  * prof.prices) /as.integer(data["num.families.gr"]), 0)
+  cost <- round((as.integer(data["frequency.gr"])  * prof.prices) /as.integer(data["num.families.gr"]), 2)
   
   
   return (cost)
   
 }
 
-CalculateCostMedication <- function(data, num.persons.gr = 5) {
+# Calculate Cost for Medications
 
-#IF(COUNTA(A34:D34)=4,
-#    52*B34*(VLOOKUP(A34,meds,2,FALSE))*(VLOOKUP(C34,weekly,2,FALSE))*(VLOOKUP(D34,yearly,2,FALSE)),
-#    IF(AND(COUNTA(A34:D34)<4,COUNTA(A34:D34)>0),"missing info",""))
+GetMedicationPrice <- function(medication){
   
-  return (cost)
+  price <- as.numeric(df.meds[which(df.meds$name == medication), 2])
+  
+  if (is.null(price) || is.na(price)) price <- 0
+  
+  return (price)  
+}
 
+GetWeeklyDays <- function(weekly.schedule){
+  
+  if (is.null(weekly.schedule) || weekly.schedule == "" ){
+    return(0)
+    
+  }  
+  
+  if (weekly.schedule == "Everyday") 7
+  else if (weekly.schedule == "Weekdays only") 5
+  else if (weekly.schedule == "Weekends only") 2
+  
+}  
+
+GetYearMultiplier <- function(yearly.schedule){
+  if (is.null(yearly.schedule) || yearly.schedule == "" ){
+    return(0)
+  }  
+  
+  if (yearly.schedule == "School year only") 0.75
+  else if (yearly.schedule == "Summer only") 0.25
+  else if (yearly.schedule == "Year-round") 1.00
+}   
+
+
+CalculateCostMedication <- function(data) {
+  
+  # 52*B34*(VLOOKUP(A34,meds,2,FALSE))*(VLOOKUP(C34,weekly,2,FALSE))*(VLOOKUP(D34,yearly,2,FALSE)),
+  
+  cost <- 52 * as.integer(data["frequency.med"]) * GetMedicationPrice(data["label.med"]) * as.numeric(GetWeeklyDays(as.character(data["week.med"]))) * as.numeric(GetYearMultiplier(as.character(data["year.med"])))
+  
+  cost <-round(cost, 2)
+  
+  return(cost)
+  
+  
 }

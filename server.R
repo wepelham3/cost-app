@@ -270,9 +270,10 @@ shinyServer(function(input, output, session) {
   
   
   observe({
-    if (is.null(input$label.med) || input$label.med == "") {
+    if (is.null(input$label.med) || input$label.med == ""  || is.null(input$frequency.med)  || is.null(input$week.med) || is.null(input$year.med))
+     {
       shinyjs::disable("submit.med")
-    } else {
+      } else {
       shinyjs::enable("submit.med")
     }
     
