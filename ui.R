@@ -107,7 +107,7 @@ shinyUI(fluidPage(
         ),
         
         actionButton(inputId = "submit.ind", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
-        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "reset.ind", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "delete.ind", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
       
       ),
@@ -117,7 +117,7 @@ shinyUI(fluidPage(
         shinyjs::hidden(textInput("cost.gr", "Cost", "0")),
         textInput(inputId = "label.gr", label = "Label:"),
         textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
-        textInput(inputId = "duration.gr", label = "Duration (in minutes):", value = "0"),
+        textInput(inputId = "duration.gr", label = "Duration per session (in minutes):", value = "0"),
         textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "0"),
         
         div(id = "p1.gr",
@@ -170,7 +170,7 @@ shinyUI(fluidPage(
         ),
         
         actionButton(inputId = "submit.gr", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
-        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "reset.gr", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "delete.gr", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
      
@@ -179,7 +179,9 @@ shinyUI(fluidPage(
         title = "Medication", value = "tab.med",
         shinyjs::hidden(textInput("id.med", "Id", "0")),
         shinyjs::hidden(textInput("cost.med", "Cost", "0")),
-        selectInput(inputId = "label.med", label = "Medication:", choices = df.meds$name),
+        selectizeInput(inputId = "label.med", label = "Medication:", choices = df.meds$name,
+                       options = list(placeholder = "Choose a medication from the list.",
+                       onInitialize = I('function() { this.setValue(""); }'))),
         selectInput(inputId = "frequency.med", label = "Pills taken per day:",
                     choices = c(1, 2, 3)),
         selectInput(inputId = "week.med", label = "Weekly schedule:",
@@ -188,7 +190,7 @@ shinyUI(fluidPage(
                    choices = c("Year-round", "School year only", "Summer only")),
         
         actionButton(inputId = "submit.med", tags$a(href= NULL, class = "btn btn-primary", "Submit")),
-        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset")),
+        actionButton(inputId = "reset.med", tags$a(href= NULL, class = "btn btn-primary", "Reset fields")),
         actionButton(inputId = "delete.med", tags$a(href= NULL, class = "btn btn-primary", "Delete"))
         
       )
