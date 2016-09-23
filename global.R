@@ -1,8 +1,8 @@
 library(magrittr)
 library(readr)
 
-df.meds = read_csv("data-meds.csv", col_names = TRUE)
-df.comps = read_csv("data-comps.csv", col_names = TRUE)
+df.meds = read_csv("data/data-meds.csv", col_names = TRUE)
+df.comps = read_csv("data/data-comps.csv", col_names = TRUE)
 
 # --------------------------------------------------------------------
 

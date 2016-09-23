@@ -3,8 +3,6 @@ library(magrittr)
 library(readr)
 library(shinyjs)
 
-df.meds = read_csv("data-meds.csv", col_names = TRUE)
-df.comps = read_csv("data-comps.csv", col_names = TRUE)
 options(shiny.trace=TRUE)
 
 # --------------------------------------------------------------------
