@@ -1,5 +1,6 @@
 library(shiny)
 library(magrittr)
+library(dplyr)
 library(readr)
 library(DT)
 library(shinyjs)
@@ -329,7 +330,10 @@ shinyServer(function(input, output, session) {
     input$submit.ind
     #update after delete is clicked
     input$delete.ind
-    ReadDataIndivTreatment()
+    if (!is.null(ReadDataIndivTreatment())) {
+      ReadDataIndivTreatment() %>%
+        mutate(cost.ind = paste0("$", sprintf("%.0f", round(cost.ind, 0))))
+    }
   }, server = FALSE, selection = "single", 
   colnames = unname(GetTableMetadataIndivTreatment()$fields)[-1]
   , options = list(sDom  = '<"top">rt<"bottom">ip)'
@@ -353,7 +357,10 @@ shinyServer(function(input, output, session) {
     input$submit.gr
     #update after delete is clicked
     input$delete.gr
-    ReadDataGroupTreatment()
+    if (!is.null(ReadDataGroupTreatment())) {
+      ReadDataGroupTreatment() %>%
+        mutate(cost.gr = paste0("$", sprintf("%.0f", round(cost.gr, 0))))
+    }
   }, server = FALSE, selection = "single", 
   colnames = unname(GetTableMetadataGroupTreatment()$fields)[-1]
   , options = list(sDom  = '<"top">rt<"bottom">ip)') # to suppress search box
@@ -372,7 +379,10 @@ shinyServer(function(input, output, session) {
     input$submit.med
     #update after delete is clicked
     input$delete.med
-    ReadDataMedication()
+    if (!is.null(ReadDataMedication())) {
+      ReadDataMedication() %>%
+        mutate(cost.med = paste0("$", sprintf("%.0f", round(cost.med, 0))))
+    }
   }, server = FALSE, selection = "single", 
   colnames = unname(GetTableMetadataMedication()$fields)[-1]
   , options = list(sDom  = '<"top">rt<"bottom">ip)') # to suppress search box
