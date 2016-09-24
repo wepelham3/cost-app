@@ -1,5 +1,6 @@
 library(shiny)
 library(magrittr)
+library(dplyr)
 library(readr)
 library(DT)
 library(shinyjs)
@@ -436,8 +437,19 @@ shinyServer(function(input, output, session) {
     content = function(file) {
       write.csv(ReadDataMedication(), file)
     }
-  ) 
+  )
   
+  # Render DataTables for looking up prices and wages
+  output$DT.lookup.meds = DT::renderDataTable({df.meds %>% mutate(price = paste0("$", sprintf("%.2f", round(price, 2))))},
+                                              colnames = c("Medication", "Price"),
+                                              rownames = FALSE,
+                                              options = list(pageLength = 25))
+  
+  output$DT.lookup.comps = DT::renderDataTable({df.comps %>% mutate(comp.per.min = paste0("$", sprintf("%.0f", round(comp.per.min, 0))))},
+                                               colnames = c("Professional", "Compensation ($/hour)"),
+                                               rownames = FALSE,
+                                               options = list(dom = "ft",
+                                                              pageLength = 50))
   
 })
 
