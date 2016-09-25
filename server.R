@@ -439,21 +439,22 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  # Render DataTables for looking up prices and wages
-  output$DT.lookup.meds = DT::renderDataTable({df.meds %>%
-                                                   mutate(price = paste0("$", sprintf("%.2f", round(price, 2))))},
-                                              colnames = c("Medication", "Price"),
-                                              rownames = FALSE,
-                                              options = list(pageLength = 10))
+  # Render DataTable for looking up med prices
+  datatable.DT.lookup.meds = df.meds %>%
+    datatable(colnames = c("Medication", "Price"),
+              rownames = FALSE,
+              options = list(pageLength = 10)) %>%
+    formatCurrency("price", digits = 2)
+  output$DT.lookup.meds = DT::renderDataTable({datatable.DT.lookup.meds})
   
-  output$DT.lookup.comps = DT::renderDataTable({df.comps %>%
-                                                   filter(person != "None") %>%
-                                                   mutate(wage.per.hour = paste0("$", sprintf("%.0f", round(wage.per.hour, 0))),
-                                                          comp.per.hour = paste0("$", sprintf("%.0f", round(comp.per.hour, 0))))},
-                                               colnames = c("Professional", "Full BLS Label", "Hourly Wage", "Hourly Compensation"),
-                                               rownames = FALSE,
-                                               options = list(dom = "ft",
-                                                              pageLength = 50))
+  # Render DataTable for looking up person wages and compensations
+  datatable.DT.lookup.comps = df.comps %>%
+    datatable(colnames = c("Professional", "Full BLS Label", "Hourly Wage", "Hourly Compensation"),
+              rownames = FALSE,
+              options = list(dom = "ft",
+                             pageLength = 50)) %>%
+    formatCurrency(c("wage.per.hour", "comp.per.hour"), digits = 0)
+  output$DT.lookup.comps = DT::renderDataTable({datatable.DT.lookup.comps})
   
 })
 
