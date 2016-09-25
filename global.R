@@ -438,7 +438,7 @@ UpdateInputsMedication <- function(data, session) {
 
 GetProfessionalPrice <- function(person){
   
-  price <- as.numeric(df.comps[which(df.comps$person == person), 2])
+  price <- as.numeric(df.comps[which(df.comps$person == person), "comp.per.hour"])
   
   if (is.null(price) || is.na(price)) price <- 0
   

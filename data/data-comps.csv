@@ -1,16 +1,16 @@
-person,comp.per.min
-None,0
-Psychiatrist,128.61
-Pediatricians,123.47
-Physician Assistants,68.48
-Nurse Practitioner,68.98
-Registered Nurse,49.12
-Mental Health Counselor,30.97
-"Clinical, Counseling, and School Psychologists",52.11
-Mental Health and Substance Abuse Social Workers,32.25
-"Elementary School Teachers, Except Special Education",59.43
-Parent,29.28
-Paraprofessional,17.57
-"Education Administrators, Elementary and Secondary School",64.6
-Teacher Aide,17.57
-"Educational, Guidance, School, and Vocational Counselors - Elementary and Secondary Schools",44.3
+person,bls.label,wage.per.hour,comp.per.hour
+None,None,0,0
+Guidance Counselor,"Educational, Guidance, School, and Vocational Counselors - Elementary and Secondary Schools",30.26,44.3
+Mental Health Counselor (MA),Mental Health Counselor,21.15,30.97
+Nurse Practicioner,Nurse Practitioner,47.11,68.98
+Paraprofessional,N/A,12,17.57
+Parent,N/A,20,20
+Pediatrician,Pediatricians,84.33,123.47
+Physician Assistant,Physician Assistants,46.77,68.48
+Principal,"Education Administrators, Elementary and Secondary School",44.125,64.6
+Psychiatrist,Psychiatrist,87.84,128.61
+Psychologist (PhD),"Clinical, Counseling, and School Psychologists",35.59,52.11
+Registered Nurse,Registered Nurse,33.55,49.12
+Social Worker,Mental Health and Substance Abuse Social Workers,22.03,32.25
+Teacher (elementary),"Elementary School Teachers, Except Special Education",40.59285714,59.43
+Teacher Aide,Teacher Aide,12,17.57
