@@ -29,7 +29,9 @@ sidebarLayout(sidebarPanel(
                  textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
                  textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
                  div(id = "p1.ind",
-                     selectInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person),
+                     selectizeInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person,
+                                    options = list(placeholder = "Choose a person from the list.",
+                                                   onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.ind", label = "Person 1 Commute Time (one-way in min)", value = "0"),
                      a(id = "add.person2.ind", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
                      tags$br(),
@@ -37,7 +39,9 @@ sidebarLayout(sidebarPanel(
                  ),
                  shinyjs::hidden(
                    div(id = "p2.ind",
-                       selectInput(inputId = paste0("person", 2, ".ind"), label = paste0("Person ", 2), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 2, ".ind"), label = paste0("Person ", 2), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 2, ".comm.ind"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person3.ind", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
                        tags$br(),
@@ -47,7 +51,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p3.ind",
-                       selectInput(inputId = paste0("person", 3, ".ind"), label = paste0("Person ", 3), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 3, ".ind"), label = paste0("Person ", 3), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 3, ".comm.ind"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person4.ind", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
                        tags$br(),
@@ -57,7 +63,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p4.ind",
-                       selectInput(inputId = paste0("person", 4, ".ind"), label = paste0("Person ", 4), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 4, ".ind"), label = paste0("Person ", 4), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 4, ".comm.ind"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person5.ind", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
                        tags$br(),
@@ -67,7 +75,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p5.ind",
-                       selectInput(inputId = paste0("person", 5, ".ind"), label = paste0("Person ", 5), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 5, ".ind"), label = paste0("Person ", 5), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 5, ".comm.ind"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
                        #  a(id = "add.person4.ind", "Add Person"),
                        tags$br(),
@@ -90,7 +100,9 @@ sidebarLayout(sidebarPanel(
                  textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "0"),
                  
                  div(id = "p1.gr",
-                     selectInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person),
+                     selectizeInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person,
+                                    options = list(placeholder = "Choose a person from the list.",
+                                                   onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.gr", label = "Person 1 Commute Time (one-way in min)", value = "0"),
                      a(id = "add.person2.gr", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
                      tags$br(),
@@ -100,7 +112,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p2.gr",
-                       selectInput(inputId = paste0("person", 2, ".gr"), label = paste0("Person ", 2), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 2, ".gr"), label = paste0("Person ", 2), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 2, ".comm.gr"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person3.gr", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
                        tags$br(),
@@ -110,7 +124,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p3.gr",
-                       selectInput(inputId = paste0("person", 3, ".gr"), label = paste0("Person ", 3), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 3, ".gr"), label = paste0("Person ", 3), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 3, ".comm.gr"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person4.gr", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
                        tags$br(),
@@ -120,7 +136,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p4.gr",
-                       selectInput(inputId = paste0("person", 4, ".gr"), label = paste0("Person ", 4), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 4, ".gr"), label = paste0("Person ", 4), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 4, ".comm.gr"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person5.gr", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
                        tags$br(),
@@ -130,7 +148,9 @@ sidebarLayout(sidebarPanel(
                  
                  shinyjs::hidden(
                    div(id = "p5.gr",
-                       selectInput(inputId = paste0("person", 5, ".gr"), label = paste0("Person ", 5), choices = df.comps$person),
+                       selectizeInput(inputId = paste0("person", 5, ".gr"), label = paste0("Person ", 5), choices = df.comps$person,
+                                      options = list(placeholder = "Choose a person from the list.",
+                                                     onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 5, ".comm.gr"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
                        #  a(id = "add.person4.ind", "Add Person"),
                        tags$br(),
