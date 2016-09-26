@@ -446,8 +446,51 @@ shinyServer(function(input, output, session) {
     content = function(file) {
       write.csv(ReadDataMedication(), file)
     }
-  ) 
+  )
   
+  # Render DataTable for looking up med prices
+  output$DT.lookup.meds = DT::renderDataTable({
+    df.meds %>%
+      datatable(colnames = c("Medication", "Price"),
+                rownames = FALSE,
+                options = list(pageLength = 10)) %>%
+      formatCurrency("price", digits = 2)
+    })
+  
+  # Render DataTable for looking up person wages and compensations
+  output$DT.lookup.comps = DT::renderDataTable({
+    df.comps %>%
+      datatable(colnames = c("Professional", "Full BLS Label", "Hourly Wage", "Hourly Compensation"),
+                rownames = FALSE,
+                options = list(dom = "ft",
+                               pageLength = 50)) %>%
+      formatCurrency(c("wage.per.hour", "comp.per.hour"), digits = 0)
+    })
+  
+  
+  # Display the resulting table
+  
+  output$summary_1 <- renderTable({
+    as.data.frame(GetSummary())
+    #colnames = FALSE
+    
+  },
+  include.colnames=FALSE)
+  
+  output$summary_2 <- renderTable({
+    as.data.frame(GetIndividualPsych())
+    
+  })
+  
+  output$summary_3 <- renderTable({
+    as.data.frame(GetGroupPsych())
+    
+  })
+  
+  output$summary_4 <- renderTable({
+    as.data.frame(GetMedicationCost())
+    
+  })
   
 })
 
