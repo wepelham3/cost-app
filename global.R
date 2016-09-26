@@ -529,3 +529,44 @@ CalculateCostMedication <- function(data) {
   
   
 }
+
+# Summary 
+
+GetSummary <- function() {
+  a <- c("Explicit Cost per Child per Year", "Total Cost per Child per Year")
+  b <- c(1, 2)
+  df.summary <- data.frame(a, b)
+  return(df.summary)
+  
+}
+
+# Individual Psychosocial
+
+GetIndividualPsych <- function() {
+  a <- c("a", "b", "c")
+  b <- c(1, 2, 3)
+  df.summary <- data.frame(a, b)
+  return(df.summary)
+  
+}
+
+# Group Psychosocial
+
+GetGroupPsych <- function() {
+  a <- c("d", "e", "f")
+  b <- c(4, 5, 6)
+  df.summary <- data.frame(a, b)
+  return(df.summary)
+  
+}
+
+# Medication Costs
+
+GetMedicationCost <- function() {
+  a <- c("g", "h", "i")
+  b <- c(7, 8, 9)
+  df.summary <- data.frame(a, b)
+  return(df.summary)
+  
+}
+

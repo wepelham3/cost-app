@@ -458,6 +458,31 @@ shinyServer(function(input, output, session) {
       formatCurrency(c("wage.per.hour", "comp.per.hour"), digits = 0)
     })
   
+  
+  # Display the resulting table
+  
+  output$summary_1 <- renderTable({
+    as.data.frame(GetSummary())
+    #colnames = FALSE
+    
+  },
+  include.colnames=FALSE)
+  
+  output$summary_2 <- renderTable({
+    as.data.frame(GetIndividualPsych())
+    
+  })
+  
+  output$summary_3 <- renderTable({
+    as.data.frame(GetGroupPsych())
+    
+  })
+  
+  output$summary_4 <- renderTable({
+    as.data.frame(GetMedicationCost())
+    
+  })
+  
 })
 
 # It was before: Dynamically Rendering the input controls for the Individual Treatments's persons

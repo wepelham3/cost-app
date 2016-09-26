@@ -235,13 +235,83 @@ sidebarLayout(sidebarPanel(
                   ) # close tags$div
                 ) # close tags$body
       ), # close Component List tab
-      tabPanel(title = "Summary"
-               # textOutput("total.cost.explicit"),
-               # textOutput("total.cost.implicit"),
-               # textOutput("total.cost.combined"),       
-               # data table -  simple format
-               # tableOutput("table.persons.ind"),      
+      tabPanel(title = "Summary",
+               #    textOutput("total.cost.explicit"),
+               #    textOutput("total.cost.implicit"),
+               #    textOutput("total.cost.combined"), 
+               br(),
+               tabsetPanel(type = "pills", id = "summary.output",
+                           tabPanel(title = "Totals", value = "tab.totals", 
+                                    style = "color: #4177b7;",
+                                    
+                                    tags$style(HTML("
+                                                    table {
+                                                    padding: 30px 0px 0px 0px;
+                                                    color: ##4177b7;
+                                                    #                 table-layout: fixed;
+                                                    #                 width: 100%;
+                                                    # These two lines would adjust the size of a table. Still trying to figure out how to modify it.
+                                                    }
+                                                    
+                                                    th{
+                                                    font-weight: bold;
+                                                    background: #4177b7;
+                                                    color: #ffffff;
+                                                    }
+                                                    
+                                                    td{
+                                                    td width=1000px;
+                                                    }")),
+
+                                    fluidRow(
+                                      column(12, offset= 0.5,
+                                             tags$h4(tags$b("Total Costs"), style = "color: #ffffff"),
+                                             
+                                             fluidRow(
+                                               
+                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_1'), tableOutput('summary_2')),
+                                               tags$head(tags$style("#summary_1 table {background-color: white; }", media="screen", type="text/css")),
+                                               tags$head(tags$style("#summary_2 table {background-color: white; }", media="screen", type="text/css"))
+                                               
+                                             ),
+                                             br(),
+                                             hr()
+                                      )
+                                    ) # close fluidRow
+                                    ),#close totals tab
+                           
+                           tabPanel(title = "Specifics", value = "tab.specifics", 
+                                    style = "color: #4177b7;",
+                                    
+                                    fluidRow(
+                                      column(12, offset= 0.5,
+                                             tags$h4(tags$b("Specific Costs"), style = "color: #ffffff"),
+                                             fluidRow(
+                                               
+                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
+                                               tags$head(tags$style("#summary_3 table {background-color: white; }", media="screen", type="text/css")),
+                                               tags$head(tags$style("#summary_4 table {background-color: white; }", media="screen", type="text/css"))
+                                               
+                                             )
+                                             
+                                      )
+                                    )#close fluid row
+                           )#close specifics tab
+                           )#close summary tabset
+               
+               
+               
+               
+               #tableOutput("by.ind.comp"),
+               #tableOutput("by.gr.comp"),
+               #tableOutput("by.person"),
+               #tableOutput("by.med")
+               
+               
       ) # close Summary tab
     ) # close tabsetPanel
   ) # close mainPanel
+  
+  
 )
+#))
