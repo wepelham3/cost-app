@@ -128,22 +128,22 @@ shinyServer(function(input, output, session) {
       data <- ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ]
       UpdateInputsIndivTreatment(data, session)
     
-      if ( data["person2.ind"] != "" && data["person2.ind"] != "None" )
+      if (data["person2.ind"] != "" )    #&& data["person2.ind"] != "None" )
         shinyjs::show(id = "p2.ind", anim = TRUE)
        else
         shinyjs::hide(id = "p2.ind", anim = TRUE) 
       
-      if ( data["person3.ind"] != "" &&  data["person3.ind"] != "None" )
+      if ( data["person3.ind"] != "" )   #&&  data["person3.ind"] != "None" )
         shinyjs::show(id = "p3.ind", anim = TRUE)
       else
         shinyjs::hide(id = "p3.ind", anim = TRUE) 
       
-      if (data["person4.ind"] != "" && data["person4.ind"] != "None" )
+      if (data["person4.ind"] != "" )  #&& data["person4.ind"] != "None" )
         shinyjs::show(id = "p4.ind", anim = TRUE)
       else
         shinyjs::hide(id = "p4.ind", anim = TRUE) 
       
-      if (data["person5.ind"] != "" && data["person5.ind"] != "None" )
+      if (data["person5.ind"] != "" ) #&& data["person5.ind"] != "None" )
         shinyjs::show(id = "p5.ind", anim = TRUE)
       else
         shinyjs::hide(id = "p5.ind", anim = TRUE) 
@@ -251,22 +251,22 @@ shinyServer(function(input, output, session) {
       data <- ReadDataGroupTreatment()[input$data.table.gr.treatment_rows_selected, ]
       UpdateInputsGroupTreatment(data, session)
       
-      if (data["person2.gr"] != "None" )
+      if (data["person2.gr"]  != ""  )
         shinyjs::show(id = "p2.gr", anim = TRUE)
       else
         shinyjs::hide(id = "p2.gr", anim = TRUE) 
       
-      if (data["person3.gr"] != "None" )
+      if (data["person3.gr"]  != ""  )
         shinyjs::show(id = "p3.gr", anim = TRUE)
       else
         shinyjs::hide(id = "p3.gr", anim = TRUE) 
       
-      if (data["person4.gr"] != "None" )
+      if (data["person4.gr"]  != ""  )
         shinyjs::show(id = "p4.gr", anim = TRUE)
       else
         shinyjs::hide(id = "p4.gr", anim = TRUE) 
       
-      if (data["person5.gr"] != "None" )
+      if (data["person5.gr"]  != ""  )
         shinyjs::show(id = "p5.gr", anim = TRUE)
       else
         shinyjs::hide(id = "p5.gr", anim = TRUE) 

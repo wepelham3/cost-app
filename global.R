@@ -569,7 +569,7 @@ GetSummary2 <- function(med.costs, prof.costs, parent.costs) {
 
 GetSummaryByIndivTreatment <- function() {
   
-  if (exists("df.ind.treatment")) {
+  if (exists("df.ind.treatment") && nrow(df.ind.treatment) > 0){
     
     individual.component <- paste(df.ind.treatment$label.ind,", ",df.ind.treatment$frequency.ind,"x/yr, "
                                   ,df.ind.treatment$duration.ind,"min each", sep="")
@@ -577,11 +577,24 @@ GetSummaryByIndivTreatment <- function() {
     cost <- df.ind.treatment$cost
       
     df.summary.ind <- data.frame(individual.component, cost)
-    names(df.summary.ind) = c("By Individual Component", "Cost")
+   
+  } 
+  
+  else {
+    
+    df.summary.ind  <- data.frame(  individual.component = character()
+                                  , cost = integer() )
+    
+    
+    
+  }
+  
+  
+  names(df.summary.ind) = c("By Individual Component", "Cost")
   
   return(df.summary.ind)
   
- } 
+  
 } # close GetSummaryByIndivTreatment
 
 # By Group Component
@@ -589,7 +602,7 @@ GetSummaryByIndivTreatment <- function() {
 
 GetSummaryByGroupTreatment <- function() {
   
-  if (exists("df.gr.treatment")) {
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0){
     
     group.component <- paste(df.gr.treatment$label.gr,", ",df.gr.treatment$frequency.gr,"x/yr, "
                                   ,df.gr.treatment$duration.gr,"min each", sep="")
@@ -597,11 +610,22 @@ GetSummaryByGroupTreatment <- function() {
     cost <- df.gr.treatment$cost
     
     df.summary.gr <- data.frame(group.component, cost)
-    names(df.summary.gr) = c("By Group Component", "Cost")
-    
-    return(df.summary.gr)
     
   } 
+  else {
+    
+    df.summary.gr <- data.frame(  group.component = character()
+                                   , cost = integer() )
+    
+    
+    
+  }
+    
+
+  names(df.summary.gr) = c("By Group Component", "Cost")
+  
+  return(df.summary.gr)
+  
 } # close GetSummaryByGroupTreatment
 
 
@@ -641,7 +665,7 @@ GetSummaryByPerson <- function(num.persons = 5){
   k <- 1
   
   
-  if (exists("df.ind.treatment")) {
+  if (exists("df.ind.treatment") && nrow(df.ind.treatment) > 0 ) {
     
     for (i in 1:nrow(df.ind.treatment)){
       
@@ -667,9 +691,9 @@ GetSummaryByPerson <- function(num.persons = 5){
     
   }  
   
-  if (exists("df.gr.treatment")) {
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0 )  {
     
-    for (i in 1:nrow(df.gr.treatment)){
+    for (i in 1:nrow(df.gr.treatment) && nrow(df.gr.treatment) > 0){
       
       data <- df.gr.treatment[i, ];
       
@@ -698,16 +722,17 @@ GetSummaryByPerson <- function(num.persons = 5){
      df.persons <- do.call(rbind, list.persons)
      df.persons <- ddply(df.persons, .(person), summarise, cost=sum(cost))
      df.persons$cost = round(df.persons$cost, 2)
-     names(df.persons) = c("By Person", "Cost")
+     
    }
   
   else {
     
-    df.persons <- data.frame( person = character()
+    df.persons <- data.frame(  person = character()
                               , cost = integer()
                               )
   }
  
+  names(df.persons) = c("By Person", "Cost")
   return(df.persons)   
     
 } # close GetSummaryByPerson
@@ -721,7 +746,7 @@ GetSummaryByParent <- function(num.persons = 5){
   k <- 1
   
   
-  if (exists("df.ind.treatment")) {
+  if (exists("df.ind.treatment") &&  nrow(df.ind.treatment) > 0)  {
     
     for (i in 1:nrow(df.ind.treatment)){
       
@@ -747,7 +772,7 @@ GetSummaryByParent <- function(num.persons = 5){
     
   }  
   
-  if (exists("df.gr.treatment")) {
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0) {
     
     for (i in 1:nrow(df.gr.treatment)){
       
@@ -778,7 +803,7 @@ GetSummaryByParent <- function(num.persons = 5){
     df.persons <- do.call(rbind, list.persons)
     df.persons <- ddply(df.persons, .(person), summarise, cost=sum(cost))
     df.persons$cost = round(df.persons$cost, 2)
-    names(df.persons) = c("By Person", "Cost")
+    
   }
   
   else {
@@ -788,6 +813,7 @@ GetSummaryByParent <- function(num.persons = 5){
     )
   }
   
+  names(df.persons) = c("By Person", "Cost")
   return(df.persons)   
   
 } # close GetSummaryByParent
@@ -798,7 +824,7 @@ GetSummaryByParent <- function(num.persons = 5){
 
 GetSummaryByMedication <- function() {
   
-  if (exists("df.med")) {
+  if (exists("df.med") &&  nrow(df.med) > 0) {
     
     med.component <- paste(df.med$label.med,", ",df.med$frequency.med,"x/day, ", df.med$week.med
                            , ", ", df.med$year.med, sep="")
@@ -806,11 +832,25 @@ GetSummaryByMedication <- function() {
     cost <- df.med$cost
     
     df.summary.med <- data.frame(med.component, cost)
-    names(df.summary.med) = c("By Medication", "Cost")
     
-    return(df.summary.med)
+    
+    
     
   } 
+  
+  else
+    {
+      
+      df.summary.med <- data.frame(  medication = character()
+                                   , cost = integer() )
+    
+    }
+      
+    
+  names(df.summary.med) = c("By Medication", "Cost")
+  
+  return(df.summary.med)   
+    
 } # close GetSummaryByMedication
 
 
