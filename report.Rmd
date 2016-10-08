@@ -1,0 +1,31 @@
+---
+title: "ADHD Cost Calculator Report"
+author: "Will Pelham"
+date: "October 8, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Cost Calculator - Total Costs
+
+This is an ..... see <http://rmarkdown.rstudio.com>.
+
+When you click ........
+
+
+```{r, echo=FALSE }
+
+library(knitr)
+
+kable(OutputSummary(GetSummary1(values$med.costs+values$prof.costs, values$parent.costs),  c("Total", "Cost")),  caption ='Grand Totals')
+kable(OutputSummary(GetSummary2(values$med.costs, values$prof.costs, values$parent.costs),  c("Category", "Cost")), caption ='Sub Totals')
+
+kable(OutputSummary(values$df.summary.ind,  c("By Individual Component", "Cost")), caption ='Individual Treatments Costs')
+kable(OutputSummary(values$df.summary.gr,  c("By Group Component", "Cost")), caption ='Group Treatments Costs')
+kable(OutputSummary(values$df.summary.person,  c("By Person", "Cost")), caption ='Person Costs')
+kable(OutputSummary(values$df.summary.med,  c("By Medication", "Cost")), caption ='Medication Costs')
+
+```

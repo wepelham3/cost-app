@@ -14,9 +14,16 @@ shinyUI(fluidPage(
                     font-family: 'Lato', sans-serif;
                           }")),
   
-  navbarPage(title = "Cost of Treatment Calculator",
+  list(tags$head(HTML('<link rel="icon", href="ccf.png", 
+                                   type="image/png" />'))),
+
+      titlePanel(
+        title="", windowTitle = "Cost of Treatment Calculator"
+      ),
+
+  
+  navbarPage(title = div(img(src="ccf.png", style = "height: 50%; width: 50%; padding: 0px 30px 0px 5px;", align = "top"), "Cost of Treatment Calculator"),
              
-             windowTitle = "Cost of Treatment Calculator",
              selected = "About the app",
              fluid = TRUE,
              
@@ -26,8 +33,8 @@ shinyUI(fluidPage(
              
              shinyjs::useShinyjs(),
              
-             theme = "flatly.css",
-             tags$head(tags$style('nav .container:first-child {margin-left:10px; width: 100%;}')),
+             theme = "flatlynew.css",
+             tags$head(tags$style('nav .container:first-child {margin-left:10px; width: 100%; }')),
              tags$head(tags$style(HTML("h1 {color: #e6b800;}"))),
              
              tabPanel(title = "About the app",

@@ -238,80 +238,80 @@ sidebarLayout(
                 ) # close tags$body
       ), # close Component List tab
       tabPanel(title = "Summary",
-               #    textOutput("total.cost.explicit"),
-               #    textOutput("total.cost.implicit"),
-               #    textOutput("total.cost.combined"), 
+             
+            # Creates a panel with a slightly inset border and grey background. 
+            # To change the background, bootstrap's well CSS class
+               wellPanel(id ="summary.panel",
                br(),
                                     
-                                    tags$style(HTML("
-                                                    table {
-                                                    padding: 30px 0px 0px 0px;
-                                                    color: ##4177b7;
+               tags$style(HTML("
+                   table {
+                           padding: 30px 0px 0px 0px;
+                           color: ##4177b7;
                          
-                                                    # table-layout: fixed;
-                                                    # width: 100%;
-                                                    # These two lines would adjust the size of a table. Still trying to figure out how to modify it.
-                                                    }
-                                                    
-                                                    th{
-                                                    font-weight: bold;
-                                                    background: #4177b7;
-                                                    color: #ffffff;
-                                                    }
-                                                    
-                                                    td{
-                                                    td width=1000px;
-                                                    }")),
+                           # table-layout: fixed;
+                           # width: 100%;
+                           # These two lines would adjust the size of a table. Still trying to figure out how to modify it.
+                         }
+                            
+                    th {
+                         font-weight: bold;
+                         background: #4177b7;
+                         color: #ffffff;
+                      }
+                                              
+                    td {
+                         td width=1000px;
+                       }")),
 
-                                    fluidRow(
-                                      column(12, offset= 0.5,
-                                             tags$h4(tags$b("Total Costs"), style = "color: #ffffff"),
+                fluidRow(
+                  column(12, offset= 0.5,
+                    tags$h4(tags$b("Total Costs"), style = "color: #4177b7"),
                                              
-                                             fluidRow(
-                                               
-                                               splitLayout(cellWidths = c("50%", "50%"), tableOutput('summary_1'), tableOutput('summary_2')),
-                                               tags$head(tags$style("#summary_1 table {background-color: white; }", media="screen", type="text/css")),
-                                               tags$head(tags$style("#summary_2 table {background-color: white; }", media="screen", type="text/css"))
-                                               
-                                             ),
-                                             br(),
-                                             hr()
-                                      )
-                                    ), # close fluidRow
+                    fluidRow(
+                      splitLayout(cellWidths = c("50%", "50%"), tableOutput('summary_1'), tableOutput('summary_2')),
+                      tags$head(tags$style("#summary_1 table {background-color: yellow; }", media="screen", type="text/css")),
+                      tags$style(type="text/css", "#summary_1 tr:last-child {font-weight:bold;}"),
+                      tags$head(tags$style("#summary_2 table {background-color: yellow; }", media="screen", type="text/css"))
+                             
+                    )
+                  # , br()
+                  # , hr()
+                  ) # close column
+                 ), # close fluidRow
 
-                                    fluidRow(
-                                      column(12, offset= 0.5,
-                                             tags$h4(tags$b("Specific Costs"), style = "color: #ffffff"),
-                                             fluidRow(
+                fluidRow(
+                   column(12, offset= 0.5,
+                     tags$h4(tags$b("Specific Costs"), style = "color: #4177b7"),
+                   
+                     fluidRow(
+                    
+                       splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
+                       tags$head(tags$style("#summary_3 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
+                       tags$head(tags$style("#summary_4 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                              
+                      ),
+                      br(),
+                      fluidRow(
                                                
-                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
-                                               tags$head(tags$style("#summary_3 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
-                                               tags$head(tags$style("#summary_4 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                        splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_5'), tableOutput('summary_6')),
+                        tags$head(tags$style("#summary_5 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
+                        tags$head(tags$style("#summary_6 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
                                                
-                                             ),
-                                             br(),
-                                             fluidRow(
-                                               
-                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_5'), tableOutput('summary_6')),
-                                               tags$head(tags$style("#summary_5 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
-                                               tags$head(tags$style("#summary_6 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
-                                               
-                                             )
+                      )
                                              
-                                      )
-                                    )#close fluid row
+                  ) # close column
+               ),#close fluid row
+               #  wellPanel(
+               
+               radioButtons('report.format', 'Report format', c('PDF', 'HTML', 'Word'),
+                             inline = TRUE),
+               #              tags$head(tags$style("#report.format {color: white}", media="screen", type="text/css")),
+               downloadButton('download.report', 'Download Report')
 
                
-               
-               
-               
-               #tableOutput("by.ind.comp"),
-               #tableOutput("by.gr.comp"),
-               #tableOutput("by.person"),
-               #tableOutput("by.med")
-               
-               
-      ) # close Summary tab
+       ) #close wellPanel
+     ) # close Summary tab
     ) # close tabsetPanel
   ) # close mainPanel
   
