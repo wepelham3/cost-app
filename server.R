@@ -622,7 +622,7 @@ shinyServer(function(input, output, session) {
                 options = list(dom = "ft",
                                pageLength = 50),
                 escape = FALSE) %>%
-      formatCurrency(c("mean.hourly.wage", "mean.hourly.compensation"), digits = 0)
+      formatCurrency(c("mean.hourly.wage", "mean.hourly.compensation"), digits = 2)
     })
   
   
