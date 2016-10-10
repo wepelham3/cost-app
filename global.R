@@ -1,5 +1,6 @@
 library(magrittr)
 library(readr)
+library(plyr)
 
 df.meds = read_csv("data/data-meds.csv", col_names = TRUE)
 df.comps = read_csv("data/data-comps.csv", col_names = TRUE)
@@ -55,13 +56,13 @@ CastDataIndivTreatment <- function(data, num.persons.ind = 5) {
                       , duration.ind = as.integer(data["duration.ind"])
                       , person1.ind = data["person1.ind"]
                       , p1.comm.ind = as.integer(data["p1.comm.ind"])
-                      , person2.ind = data["person2.ind"]
+                      , person2.ind = if(data["person2.ind"] != "N/A") data["person2.ind"] else ""
                       , p2.comm.ind = as.integer(data["p2.comm.ind"])
-                      , person3.ind = data["person3.ind"]
+                      , person3.ind = if(data["person3.ind"] != "N/A") data["person3.ind"] else ""
                       , p3.comm.ind = as.integer(data["p3.comm.ind"])
-                      , person4.ind = data["person4.ind"]
+                      , person4.ind = if(data["person4.ind"] != "N/A") data["person4.ind"] else ""
                       , p4.comm.ind = as.integer(data["p4.comm.ind"])
-                      , person5.ind = data["person5.ind"]
+                      , person5.ind = if(data["person5.ind"] != "N/A") data["person5.ind"] else ""
                       , p5.comm.ind = as.integer(data["p5.comm.ind"])
                       , stringsAsFactors = FALSE)
   
@@ -119,11 +120,11 @@ DeleteDataIndivTreatment <- function(data) {
 CreateDefaultIndivTreatment <- function() {
   default.indiv.treatment <- CastDataIndivTreatment(
     list(id.ind = "0", cost.ind = "0", label.ind = "", frequency.ind = "0", duration.ind = "0"
-         , person1.ind = "None", p1.comm.ind = "0"
-         , person2.ind = "None", p2.comm.ind = "0"
-         , person3.ind = "None", p3.comm.ind = "0"
-         , person4.ind = "None", p4.comm.ind = "0"
-         , person5.ind = "None", p5.comm.ind = "0"  
+         , person1.ind = "", p1.comm.ind = "0"
+         , person2.ind = "", p2.comm.ind = "0"
+         , person3.ind = "", p3.comm.ind = "0"
+         , person4.ind = "", p4.comm.ind = "0"
+         , person5.ind = "", p5.comm.ind = "0"  
       )
     , 5) 
   
@@ -211,15 +212,15 @@ CastDataGroupTreatment <- function(data, num.persons.gr = 5) {
                         , frequency.gr = as.integer(data["frequency.gr"])
                         , duration.gr = as.integer(data["duration.gr"])
                         , num.families.gr = as.integer(data["num.families.gr"])
-                        , person1.gr = data["person1.gr"]
+                        , person1.gr = data["person1.gr"] 
                         , p1.comm.gr = as.integer(data["p1.comm.gr"])
-                        , person2.gr = data["person2.gr"]
+                        , person2.gr = if(data["person2.gr"] != "N/A") data["person2.gr"] else ""
                         , p2.comm.gr = as.integer(data["p2.comm.gr"])
-                        , person3.gr = data["person3.gr"]
+                        , person3.gr = if(data["person3.gr"] != "N/A") data["person3.gr"] else ""
                         , p3.comm.gr = as.integer(data["p3.comm.gr"])
-                        , person4.gr = data["person4.gr"]
+                        , person4.gr = if(data["person4.gr"] != "N/A") data["person4.gr"] else ""
                         , p4.comm.gr = as.integer(data["p4.comm.gr"])
-                        , person5.gr = data["person5.gr"]
+                        , person5.gr = if(data["person5.gr"] != "N/A") data["person5.gr"] else ""
                         , p5.comm.gr = as.integer(data["p5.comm.gr"])
                         , stringsAsFactors = FALSE)
   
@@ -277,11 +278,11 @@ DeleteDataGroupTreatment <- function(data) {
 CreateDefaultGroupTreatment <- function() {
   default.group.treatment <- CastDataGroupTreatment(
     list(id.gr = "0", cost.gr = "0", label.gr = "", frequency.gr = "0", duration.gr = "0", num.families.gr = "1"
-         , person1.gr = "None", p1.comm.gr = "0"
-         , person2.gr = "None", p2.comm.gr = "0"
-         , person3.gr = "None", p3.comm.gr = "0"
-         , person4.gr = "None", p4.comm.gr = "0"
-         , person5.gr = "None", p5.comm.gr = "0"  
+         , person1.gr = "", p1.comm.gr = "0"
+         , person2.gr = "", p2.comm.gr = "0"
+         , person3.gr = "", p3.comm.gr = "0"
+         , person4.gr = "", p4.comm.gr = "0"
+         , person5.gr = "", p5.comm.gr = "0"  
     )
     , 5) 
   
@@ -530,43 +531,333 @@ CalculateCostMedication <- function(data) {
   
 }
 
-# Summary 
+# Summary 1
 
-GetSummary <- function() {
-  a <- c("Explicit Cost per Child per Year", "Total Cost per Child per Year")
-  b <- c(1, 2)
-  df.summary <- data.frame(a, b)
+GetSummary1 <- function(explicit_costs, implicit_costs) {
+  total.label <- c("Total Explicit Cost per Child per Year", "Total Implicit Cost per Child per Year", "Total Combined Cost per Child per 
+         Calendar Year")
+  cost <- c(explicit_costs, implicit_costs, explicit_costs + implicit_costs)
+  df.summary <- data.frame(total.label, cost)
   return(df.summary)
   
 }
 
-# Individual Psychosocial
+# Summary 2
 
-GetIndividualPsych <- function() {
-  a <- c("a", "b", "c")
-  b <- c(1, 2, 3)
-  df.summary <- data.frame(a, b)
+# Calculate Total Costs
+GetTotalCostsMedication <- function() {
+  
+  if (exists("df.med")) {
+    total.cost.med <<- sum(df.med$cost.med)
+  } else {
+    total.cost.med <<- 0
+  }
+  return(total.cost.med)  
+}
+
+
+
+GetSummary2 <- function(med.costs, prof.costs, parent.costs) {
+  total.label <- c("Medication Costs", "Professional Time Costs", "Parent Time Costs")
+  cost <- c(med.costs, prof.costs, parent.costs)
+  df.summary <- data.frame(total.label, cost)
   return(df.summary)
   
 }
 
-# Group Psychosocial
+# By Individual Component
 
-GetGroupPsych <- function() {
-  a <- c("d", "e", "f")
-  b <- c(4, 5, 6)
-  df.summary <- data.frame(a, b)
-  return(df.summary)
+GetSummaryByIndivTreatment <- function() {
+  
+  if (exists("df.ind.treatment") && nrow(df.ind.treatment) > 0){
+    
+    individual.component <- paste(df.ind.treatment$label.ind,", ",df.ind.treatment$frequency.ind,"x/yr, "
+                                  ,df.ind.treatment$duration.ind,"min each", sep="")
+   
+    cost <- df.ind.treatment$cost
+      
+    df.summary.ind <- data.frame(individual.component, cost)
+   
+  } 
+  
+  else {
+    
+    df.summary.ind  <- data.frame(  individual.component = "-"
+                                  , cost = 0 )
+    
+    
+    
+  }
+  
+ 
+  return(df.summary.ind)
+  
+  
+} # close GetSummaryByIndivTreatment
+
+# By Group Component
+
+
+GetSummaryByGroupTreatment <- function() {
+  
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0){
+    
+    group.component <- paste(df.gr.treatment$label.gr,", ",df.gr.treatment$frequency.gr,"x/yr, "
+                                  ,df.gr.treatment$duration.gr,"min each", sep="")
+    
+    #cost <- paste("$", df.gr.treatment$cost)
+    
+    cost <- df.gr.treatment$cost
+    
+    df.summary.gr <- data.frame(group.component, cost)
+    
+  } 
+  else {
+    
+    df.summary.gr <- data.frame(  group.component = "-"
+                                   , cost = 0 )
+    
+    
+    
+  }
+    
+
+  return(df.summary.gr)
+  
+} # close GetSummaryByGroupTreatment
+
+
+# By Person
+
+CalculateCostByPersonIndivTreatment<- function(data, i){
+  
+  
+  # Freq*((Duration+(CommuteTime*2))/60)*Professional_Price
+  
+  cost <- as.integer(data["frequency.ind"]) * ((as.integer(data["duration.ind"]) + (as.integer(data[paste("p",i,".comm.ind",sep='')]) * 2))/60) * GetProfessionalPrice(as.character(data[paste("person", i, ".ind", sep="")])) 
+  
+  
+  return(cost)
   
 }
 
-# Medication Costs
-
-GetMedicationCost <- function() {
-  a <- c("g", "h", "i")
-  b <- c(7, 8, 9)
-  df.summary <- data.frame(a, b)
-  return(df.summary)
+CalculateCostByPersonGroupTreatment<- function(data, i){
+  
+  # Frequency * ((duration +(commute_time*2))/60)* ProfessionalPrice/how_many_per_group
+  
+  if(data["num.families.gr"] > 0){
+    
+    cost <- as.integer(data["frequency.gr"]) * ((as.integer(data["duration.gr"]) + (as.integer(data[paste("p",i,".comm.gr",sep='')]) * 2))/60)  * GetProfessionalPrice(as.character(data[paste("person", i, ".gr", sep="")])) / as.integer(data["num.families.gr"])
+    
+  }
+  
+  return(cost)
   
 }
+
+GetSummaryByPerson <- function(num.persons = 5){
+  
+  
+  list.persons = list()
+  
+  k <- 1
+  
+  
+  if (exists("df.ind.treatment") && nrow(df.ind.treatment) > 0 ) {
+    
+    for (i in 1:nrow(df.ind.treatment)){
+      
+      data <- df.ind.treatment[i, ];
+      
+      for (j in 1:num.persons){ 
+        
+        person = as.character(data[paste("person", j, ".ind", sep="")])
+        
+        if(person != ""){
+          cost_by_person <- data.frame(person = person
+                                       , cost = CalculateCostByPersonIndivTreatment(data, j)
+                                       , stringsAsFactors = TRUE 
+          )
+          
+          list.persons[[k]] <- cost_by_person
+          
+          k <- k + 1
+        }  
+      }  
+      
+    }   
+    
+  }  
+  
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0 )  {
+    
+    for (i in 1:nrow(df.gr.treatment) && nrow(df.gr.treatment) > 0){
+      
+      data <- df.gr.treatment[i, ];
+      
+      for (j in 1:num.persons){ 
+        
+        person = as.character(data[paste("person", j, ".gr", sep="")])
+        
+        if(person != ""){
+          cost_by_person <- data.frame(person = person
+                                       , cost = CalculateCostByPersonGroupTreatment(data, j)
+                                       , stringsAsFactors = TRUE 
+          )
+          
+          list.persons[[k]] <- cost_by_person
+          
+          k <- k + 1
+        }  
+      }  
+      
+    }   
+    
+  }  
+  
+  if(k > 1) {
+  
+     df.persons <- do.call(rbind, list.persons)
+     df.persons <- ddply(df.persons, .(person), summarise, cost=sum(cost))
+     df.persons$cost = round(df.persons$cost, 2)
+     
+   }
+  
+  else {
+    
+    df.persons <- data.frame(  person = "-"
+                               , cost = 0)
+    
+  }
+
+  return(df.persons)   
+    
+} # close GetSummaryByPerson
+
+
+GetSummaryByParent <- function(num.persons = 5){
+  
+  
+  list.persons = list()
+  
+  k <- 1
+  
+  
+  if (exists("df.ind.treatment") &&  nrow(df.ind.treatment) > 0)  {
+    
+    for (i in 1:nrow(df.ind.treatment)){
+      
+      data <- df.ind.treatment[i, ];
+      
+      for (j in 1:num.persons){ 
+        
+        person = as.character(data[paste("person", j, ".ind", sep="")])
+        
+        if(person == "Parent"){
+          cost_by_person <- data.frame(person = person
+                                       , cost = CalculateCostByPersonIndivTreatment(data, j)
+                                       , stringsAsFactors = TRUE 
+          )
+          
+          list.persons[[k]] <- cost_by_person
+          
+          k <- k + 1
+        }  
+      }  
+      
+    }   
+    
+  }  
+  
+  if (exists("df.gr.treatment") && nrow(df.gr.treatment) > 0) {
+    
+    for (i in 1:nrow(df.gr.treatment)){
+      
+      data <- df.gr.treatment[i, ];
+      
+      for (j in 1:num.persons){ 
+        
+        person = as.character(data[paste("person", j, ".gr", sep="")])
+        
+        if(person == "Parent"){
+          cost_by_person <- data.frame(person = person
+                                       , cost = CalculateCostByPersonGroupTreatment(data, j)
+                                       , stringsAsFactors = TRUE 
+          )
+          
+          list.persons[[k]] <- cost_by_person
+          
+          k <- k + 1
+        }  
+      }  
+      
+    }   
+    
+  }  
+  
+  if(k > 1) {
+    
+    df.persons <- do.call(rbind, list.persons)
+    df.persons <- ddply(df.persons, .(person), summarise, cost=sum(cost))
+    df.persons$cost = round(df.persons$cost, 2)
+    
+  }
+  
+  else {
+    
+   df.persons <- data.frame( person = character()
+                             , cost = integer()
+   )
+                                                        
+  }
+  
+
+  return(df.persons)   
+  
+} # close GetSummaryByParent
+
+
+
+# By Medication
+
+GetSummaryByMedication <- function() {
+  
+  if (exists("df.med") &&  nrow(df.med) > 0) {
+    
+    med.component <- paste(df.med$label.med,", ",df.med$frequency.med,"x/day, ", df.med$week.med
+                           , ", ", df.med$year.med, sep="")
+    
+  #  cost <- paste("$", df.med$cost)
+    
+    cost <- df.med$cost
+    df.summary.med <- data.frame(med.component, cost)
+    
+  } 
+  
+  else
+    {
+      
+      df.summary.med <- data.frame(  medication = "-"
+                                   , cost = 0)
+    
+    }
+      
+
+ 
+  return(df.summary.med)   
+    
+} # close GetSummaryByMedication
+
+OutputSummary <- function(df.summary, column.names) {
+
+df.summary.out <- as.data.frame(df.summary)
+df.summary.out$cost <- comma(df.summary.out$cost)
+df.summary.out$cost <- paste0("$", df.summary.out$cost)
+names(df.summary.out) <- column.names
+
+return(df.summary.out)
+
+}
+
+
 

@@ -2,5 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-README.html
 rsconnect/
+.html
+.pdf
+.docx

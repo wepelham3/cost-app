@@ -1,9 +1,8 @@
 person,bls.label,wage.per.hour,comp.per.hour
-None,None,0,0
 Guidance Counselor,"Educational, Guidance, School, and Vocational Counselors - Elementary and Secondary Schools",30.26,44.3
 Mental Health Counselor (MA),Mental Health Counselor,21.15,30.97
 Nurse Practicioner,Nurse Practitioner,47.11,68.98
-Occupational Therapist,Occupational Therapist,39.27,57.50
+Occupational Therapist,Occupational Therapist,39.27,57.5
 Paraprofessional,N/A,12,17.57
 Parent,N/A,20,20
 Pediatrician,Pediatricians,84.33,123.47
@@ -22,3 +21,4 @@ Teacher (elementary),"Elementary School Teachers, Except Special Education",40.5
 Teacher (middle),"Middle School Teachers, Except Special and Career/Technical Education",41.94,61.41
 Teacher (secondary),"Secondary School Teachers, Except Special and Career/Technical Education",43.17,63.21
 Teacher Aide,Teacher Aide,12,17.57
+N/A, N/A, 0, 0

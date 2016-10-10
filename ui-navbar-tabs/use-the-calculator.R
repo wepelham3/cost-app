@@ -1,7 +1,8 @@
 # calculator page
 
-sidebarLayout(sidebarPanel(
-  
+sidebarLayout(
+  sidebarPanel(
+
   tags$h4(tags$b("Click one of the tabs below to add a component to the treatment protocol."), style = "color: #4177b7"),
   
   tags$style(HTML("
@@ -30,7 +31,7 @@ sidebarLayout(sidebarPanel(
                  textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
                  div(id = "p1.ind",
                      selectizeInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person,
-                                    options = list(placeholder = "Choose a person from the list.",
+                                    options = list(placeholder = "Choose a person from the list",
                                                    onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.ind", label = "Person 1 Commute Time (one-way in min)", value = "0"),
                      a(id = "add.person2.ind", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
@@ -40,7 +41,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p2.ind",
                        selectizeInput(inputId = paste0("person", 2, ".ind"), label = paste0("Person ", 2), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 2, ".comm.ind"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person3.ind", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
@@ -52,7 +53,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p3.ind",
                        selectizeInput(inputId = paste0("person", 3, ".ind"), label = paste0("Person ", 3), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 3, ".comm.ind"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person4.ind", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
@@ -64,7 +65,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p4.ind",
                        selectizeInput(inputId = paste0("person", 4, ".ind"), label = paste0("Person ", 4), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 4, ".comm.ind"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person5.ind", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
@@ -76,7 +77,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p5.ind",
                        selectizeInput(inputId = paste0("person", 5, ".ind"), label = paste0("Person ", 5), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 5, ".comm.ind"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
                        #  a(id = "add.person4.ind", "Add Person"),
@@ -101,7 +102,7 @@ sidebarLayout(sidebarPanel(
                  
                  div(id = "p1.gr",
                      selectizeInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person,
-                                    options = list(placeholder = "Choose a person from the list.",
+                                    options = list(placeholder = "Choose a person from the list",
                                                    onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.gr", label = "Person 1 Commute Time (one-way in min)", value = "0"),
                      a(id = "add.person2.gr", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
@@ -113,7 +114,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p2.gr",
                        selectizeInput(inputId = paste0("person", 2, ".gr"), label = paste0("Person ", 2), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 2, ".comm.gr"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person3.gr", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
@@ -125,7 +126,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p3.gr",
                        selectizeInput(inputId = paste0("person", 3, ".gr"), label = paste0("Person ", 3), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 3, ".comm.gr"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person4.gr", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
@@ -137,7 +138,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p4.gr",
                        selectizeInput(inputId = paste0("person", 4, ".gr"), label = paste0("Person ", 4), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 4, ".comm.gr"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
                        a(id = "add.person5.gr", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
@@ -149,7 +150,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(
                    div(id = "p5.gr",
                        selectizeInput(inputId = paste0("person", 5, ".gr"), label = paste0("Person ", 5), choices = df.comps$person,
-                                      options = list(placeholder = "Choose a person from the list.",
+                                      options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 5, ".comm.gr"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
                        #  a(id = "add.person4.ind", "Add Person"),
@@ -169,7 +170,7 @@ sidebarLayout(sidebarPanel(
                  shinyjs::hidden(textInput("id.med", "Id", "0")),
                  shinyjs::hidden(textInput("cost.med", "Cost", "0")),
                  selectizeInput(inputId = "label.med", label = "Medication:", choices = df.meds$name,
-                                options = list(placeholder = "Choose a medication from the list.",
+                                options = list(placeholder = "Choose a medication from the list",
                                                onInitialize = I('function() { this.setValue(""); }'))),
                  selectInput(inputId = "frequency.med", label = "Pills taken per day:",
                              choices = c(1, 2, 3)),
@@ -187,6 +188,7 @@ sidebarLayout(sidebarPanel(
   
   ),
   mainPanel(
+
     tabsetPanel(
       tabPanel( title = "Component Lists",
                 tags$body(
@@ -236,79 +238,80 @@ sidebarLayout(sidebarPanel(
                 ) # close tags$body
       ), # close Component List tab
       tabPanel(title = "Summary",
-               #    textOutput("total.cost.explicit"),
-               #    textOutput("total.cost.implicit"),
-               #    textOutput("total.cost.combined"), 
+             
+            # Creates a panel with a slightly inset border and grey background. 
+            # To change the background, bootstrap's well CSS class
+               wellPanel(id ="summary.panel",
                br(),
-               tabsetPanel(type = "pills", id = "summary.output",
-                           tabPanel(title = "Totals", value = "tab.totals", 
-                                    style = "color: #4177b7;",
                                     
-                                    tags$style(HTML("
-                                                    table {
-                                                    padding: 30px 0px 0px 0px;
-                                                    color: ##4177b7;
-                                                    #                 table-layout: fixed;
-                                                    #                 width: 100%;
-                                                    # These two lines would adjust the size of a table. Still trying to figure out how to modify it.
-                                                    }
-                                                    
-                                                    th{
-                                                    font-weight: bold;
-                                                    background: #4177b7;
-                                                    color: #ffffff;
-                                                    }
-                                                    
-                                                    td{
-                                                    td width=1000px;
-                                                    }")),
+               tags$style(HTML("
+                   table {
+                           padding: 30px 0px 0px 0px;
+                           color: ##4177b7;
+                         
+                           # table-layout: fixed;
+                           # width: 100%;
+                           # These two lines would adjust the size of a table. Still trying to figure out how to modify it.
+                         }
+                            
+                    th {
+                         font-weight: bold;
+                         background: #4177b7;
+                         color: #ffffff;
+                      }
+                                              
+                    td {
+                         td width=1000px;
+                       }")),
 
-                                    fluidRow(
-                                      column(12, offset= 0.5,
-                                             tags$h4(tags$b("Total Costs"), style = "color: #ffffff"),
+                fluidRow(
+                  column(12, offset= 0.5,
+                    tags$h4(tags$b("Total Costs"), style = "color: #4177b7"),
                                              
-                                             fluidRow(
+                    fluidRow(
+                      splitLayout(cellWidths = c("50%", "50%"), tableOutput('summary_1'), tableOutput('summary_2')),
+                      tags$head(tags$style("#summary_1 table {background-color: yellow; }", media="screen", type="text/css")),
+                      tags$style(type="text/css", "#summary_1 tr:last-child {font-weight:bold;}"),
+                      tags$head(tags$style("#summary_2 table {background-color: yellow; }", media="screen", type="text/css"))
+                             
+                    )
+                  # , br()
+                  # , hr()
+                  ) # close column
+                 ), # close fluidRow
+
+                fluidRow(
+                   column(12, offset= 0.5,
+                     tags$h4(tags$b("Specific Costs"), style = "color: #4177b7"),
+                   
+                     fluidRow(
+                    
+                       splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
+                       tags$head(tags$style("#summary_3 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
+                       tags$head(tags$style("#summary_4 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                              
+                      ),
+                      br(),
+                      fluidRow(
                                                
-                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_1'), tableOutput('summary_2')),
-                                               tags$head(tags$style("#summary_1 table {background-color: white; }", media="screen", type="text/css")),
-                                               tags$head(tags$style("#summary_2 table {background-color: white; }", media="screen", type="text/css"))
+                        splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_5'), tableOutput('summary_6')),
+                        tags$head(tags$style("#summary_5 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
+                        tags$head(tags$style("#summary_6 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
                                                
-                                             ),
-                                             br(),
-                                             hr()
-                                      )
-                                    ) # close fluidRow
-                                    ),#close totals tab
-                           
-                           tabPanel(title = "Specifics", value = "tab.specifics", 
-                                    style = "color: #4177b7;",
-                                    
-                                    fluidRow(
-                                      column(12, offset= 0.5,
-                                             tags$h4(tags$b("Specific Costs"), style = "color: #ffffff"),
-                                             fluidRow(
-                                               
-                                               splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
-                                               tags$head(tags$style("#summary_3 table {background-color: white; }", media="screen", type="text/css")),
-                                               tags$head(tags$style("#summary_4 table {background-color: white; }", media="screen", type="text/css"))
-                                               
-                                             )
+                      )
                                              
-                                      )
-                                    )#close fluid row
-                           )#close specifics tab
-                           )#close summary tabset
+                  ) # close column
+               ),#close fluid row
+               #  wellPanel(
                
+               radioButtons('report.format', 'Report format', c('PDF', 'HTML', 'Word'),
+                             inline = TRUE),
+               #              tags$head(tags$style("#report.format {color: white}", media="screen", type="text/css")),
+               downloadButton('download.report', 'Download Report')
+
                
-               
-               
-               #tableOutput("by.ind.comp"),
-               #tableOutput("by.gr.comp"),
-               #tableOutput("by.person"),
-               #tableOutput("by.med")
-               
-               
-      ) # close Summary tab
+       ) #close wellPanel
+     ) # close Summary tab
     ) # close tabsetPanel
   ) # close mainPanel
   
