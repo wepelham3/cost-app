@@ -612,10 +612,16 @@ shinyServer(function(input, output, session) {
   # Render DataTable for looking up person wages and compensations
   output$DT.lookup.comps = DT::renderDataTable({
     df.comps %>%
-      datatable(colnames = c("Professional", "Full BLS Label", "Hourly Wage", "Hourly Compensation"),
+      filter(! person == "N/A") %>%
+      mutate(bls.label.and.link = ifelse(person == "Paraprofessional",
+                                         "",
+                                         paste0("<a href='", link.source.of.wage, "'>", full.label.bls, "</a>"))) %>%
+      select(person, bls.label.and.link, mean.hourly.wage, mean.hourly.compensation) %>%
+      datatable(colnames = c("Person", "Bureau of Labor Statistics Code (click link to view)", "Hourly Wage", "Hourly Compensation"),
                 rownames = FALSE,
                 options = list(dom = "ft",
-                               pageLength = 50)) %>%
+                               pageLength = 50),
+                escape = FALSE) %>%
       formatCurrency(c("mean.hourly.wage", "mean.hourly.compensation"), digits = 0)
     })
   
