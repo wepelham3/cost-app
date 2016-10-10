@@ -1,24 +1,24 @@
-person,bls.label,wage.per.hour,comp.per.hour
-Guidance Counselor,"Educational, Guidance, School, and Vocational Counselors - Elementary and Secondary Schools",30.26,44.3
-Mental Health Counselor (MA),Mental Health Counselor,21.15,30.97
-Nurse Practicioner,Nurse Practitioner,47.11,68.98
-Occupational Therapist,Occupational Therapist,39.27,57.5
-Paraprofessional,N/A,12,17.57
-Parent,N/A,20,20
-Pediatrician,Pediatricians,84.33,123.47
-Physician Assistant,Physician Assistants,46.77,68.48
-Principal,"Education Administrators, Elementary and Secondary School",44.125,64.6
-Psychiatrist,Psychiatrist,87.84,128.61
-Psychologist (PhD),"Clinical, Counseling, and School Psychologists",35.59,52.11
-Registered Nurse,Registered Nurse,33.55,49.12
-Social Worker,Mental Health and Substance Abuse Social Workers,22.03,32.25
-Special Ed. Teacher (preschool),"Special Education Teacher, Preschool",41.49,60.75
-Special Ed. Teacher (elementary),"Special Education Teachers, Kindergarten and Elementary School",41.74,61.11
-Special Ed. Teacher (middle),"Special Education Teachers, Middle School",42.89,62.79
-Special Ed. Teacher (secondary),"Special Education Teacher, Secondary School",42.89,62.79
-Teacher (preschool),"Preschool Teachers, Except Special Education",23.18,33.94
-Teacher (elementary),"Elementary School Teachers, Except Special Education",40.59285714,59.43
-Teacher (middle),"Middle School Teachers, Except Special and Career/Technical Education",41.94,61.41
-Teacher (secondary),"Secondary School Teachers, Except Special and Career/Technical Education",43.17,63.21
-Teacher Aide,Teacher Aide,12,17.57
-N/A, N/A, 0, 0
+person,full.label.bls,source.of.wage,link.source.of.wage,source.of.hours,link.source.of.hours,mean.annual.wage,mean.hours,mean.hourly.wage,fringe.scale.factor,source.of.fringe.scale.factor,link.source.of.fringe.scale.factor,mean.hourly.compensation
+Guidance Counselor,"Educational, Guidance, School, and Vocational Counselors - Elementary and Secondary Schools",oes-may2015,http://www.bls.gov/oes/current/oes211012.htm,,,,,27.16,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,39.59183673
+Mental Health Counselor (MA),Mental Health Counselor,oes-may2015,http://www.bls.gov/oes/current/oes211014.htm,,,,,21.67,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,31.58892128
+Nurse Practicioner,Nurse Practitioner,oes-may2015,http://www.bls.gov/oes/current/oes291171.htm,,,,,48.68,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,70.96209913
+Occupational Therapist,Occupational Therapist,oes-may2015,http://www.bls.gov/oes/current/oes291122.htm,,,,,39.27,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,57.24489796
+Paraprofessional,n/a,ccf,,,,,,12,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,17.49271137
+Parent,n/a,oes-may2015,http://www.bls.gov/oes/current/oes_nat.htm,,,,,23.23,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,23.23
+Pediatrician,Pediatricians,oes-may2015,http://www.bls.gov/oes/current/oes291065.htm,,,,,88.07,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,128.3819242
+Physician Assistant,Physician Assistants,oes-may2015,http://www.bls.gov/oes/current/oes291071.htm,,,,,47.73,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,69.57725948
+Principal,"Education Administrators, Elementary and Secondary School",oes-may2015,http://www.bls.gov/oes/current/oes119032.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,92940,1981,46.92,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,68.39023199
+Psychiatrist,Psychiatrist,oes-may2015,http://www.bls.gov/oes/current/oes291066.htm,,,,,93.12,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,135.7434402
+Psychologist (PhD),"Clinical, Counseling, and School Psychologists",oes-may2015,http://www.bls.gov/oes/current/oes193031.htm,,,,,36.56,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,53.29446064
+Registered Nurse,Registered Nurse,oes-may2015,http://www.bls.gov/oes/current/oes291141.htm,,,,,34.14,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,49.76676385
+Social Worker,Mental Health and Substance Abuse Social Workers,oes-may2015,http://www.bls.gov/oes/current/oes211023.htm,,,,,22.69,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,33.07580175
+Special Ed. Teacher (preschool),"Special Education Teacher, Preschool",oes-may2015,http://www.bls.gov/oes/current/oes252051.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,58210,1560,37.31,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,54.39373552
+Special Ed. Teacher (elementary),"Special Education Teachers, Kindergarten and Elementary School",oes-may2015,http://www.bls.gov/oes/current/oes252052.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,58640,1560,37.59,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,54.79554459
+Special Ed. Teacher (middle),"Special Education Teachers, Middle School",oes-may2015,http://www.bls.gov/oes/current/oes252053.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,60300,1560,38.65,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,56.34671451
+Special Ed. Teacher (secondary),"Special Education Teacher, Secondary School",oes-may2015,http://www.bls.gov/oes/current/oes252054.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,62180,1560,39.86,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,58.10346116
+Teacher (preschool),"Preschool Teachers, Except Special Education",oes-may2015,http://www.bls.gov/oes/current/oes252011.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,32500,1560,20.83,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,30.36929057
+Teacher (elementary),"Elementary School Teachers, Except Special Education",oes-may2015,http://www.bls.gov/oes/current/oes252021.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,57730,1560,37.01,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,53.94520446
+Teacher (middle),"Middle School Teachers, Except Special and Career/Technical Education",oes-may2015,http://www.bls.gov/oes/current/oes252022.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,58760,1560,37.67,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,54.90767736
+Teacher (secondary),"Secondary School Teachers, Except Special and Career/Technical Education",oes-may2015,http://www.bls.gov/oes/current/oes252031.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,60440,1560,38.74,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,56.47753607
+Teacher Aide,Teacher Assistants,oes-may2015,http://www.bls.gov/oes/current/oes259041.htm,ncs-2010,http://www.bls.gov/ncs/ocs/sp/nctb1478.pdf,26550,1560,17.02,1.46,ecec-june2016,http://www.bls.gov/news.release/ecec.nr0.htm,24.8093743
+N/A, , , , , , , , , , , , 0
