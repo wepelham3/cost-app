@@ -243,7 +243,7 @@ sidebarLayout(
             # To change the background, bootstrap's well CSS class
                wellPanel(id ="summary.panel",
                br(),
-                                    
+               fluidRow(tags$h4(em("All numbers reflect cost per child, per year:"))),                   
                tags$style(HTML("
                    table {
                            padding: 30px 0px 0px 0px;

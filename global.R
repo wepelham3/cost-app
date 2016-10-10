@@ -534,8 +534,9 @@ CalculateCostMedication <- function(data) {
 # Summary 1
 
 GetSummary1 <- function(explicit_costs, implicit_costs) {
-  total.label <- c("Total Explicit Cost per Child per Year", "Total Implicit Cost per Child per Year", "Total Combined Cost per Child per 
-         Calendar Year")
+  total.label <- c(" Total explicit cost...",
+                   "+ Total implicit cost...",
+                   "= Total combined cost...")
   cost <- c(explicit_costs, implicit_costs, explicit_costs + implicit_costs)
   df.summary <- data.frame(total.label, cost)
   return(df.summary)
@@ -558,7 +559,9 @@ GetTotalCostsMedication <- function() {
 
 
 GetSummary2 <- function(med.costs, prof.costs, parent.costs) {
-  total.label <- c("Medication Costs", "Professional Time Costs", "Parent Time Costs")
+  total.label <- c("Total cost of medications...",
+                   "Total cost of professional time...",
+                   "Total cost of parent time...")
   cost <- c(med.costs, prof.costs, parent.costs)
   df.summary <- data.frame(total.label, cost)
   return(df.summary)
