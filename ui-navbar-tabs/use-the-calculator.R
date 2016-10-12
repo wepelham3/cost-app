@@ -28,8 +28,12 @@ sidebarLayout(
                  shinyjs::hidden(textInput("cost.ind", "Cost", "0")), #in future try to synchronize
                  textInput(inputId = "label.ind", label = "Label:",
                            placeholder = "Type a label for this component here (e.g., 'teacher consultation')"),
-                 textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
-                 textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
+                 splitLayout(
+                   textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
+                   textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
+                   cellWidths = c("40%", "60%")
+                 ),
+                 hr(),
                  div(id = "p1.ind",
                      selectizeInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person,
                                     options = list(placeholder = "Choose a person from the list",
@@ -98,10 +102,13 @@ sidebarLayout(
                  shinyjs::hidden(textInput("cost.gr", "Cost", "0")),
                  textInput(inputId = "label.gr", label = "Label:",
                            placeholder = "Type a label for this component here (e.g., 'parent training')"),
-                 textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
-                 textInput(inputId = "duration.gr", label = "Duration per session (in minutes):", value = "0"),
+                 splitLayout(
+                   textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
+                   textInput(inputId = "duration.gr", label = "Duration per session (in minutes):", value = "0"),
+                   cellWidths = c("40%", "60%")
+                   ),
                  textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "0"),
-                 
+                 hr(),
                  div(id = "p1.gr",
                      selectizeInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person,
                                     options = list(placeholder = "Choose a person from the list",
