@@ -497,12 +497,15 @@ shinyServer(function(input, output, session) {
     input$delete.ind
     if (!is.null(ReadDataIndivTreatment())) {
       ReadDataIndivTreatment() %>%
-        mutate(cost.ind = paste0("$", sprintf("%.0f", round(cost.ind, 0))))
+        mutate(cost.ind = paste0("$", sprintf("%.0f", round(cost.ind, 0)))) %>%
+        select(cost.ind, label.ind, frequency.ind, duration.ind,
+               person1.ind, person2.ind, person3.ind, person4.ind, person5.ind)
     }
   }, server = FALSE, selection = "single", 
-  colnames = unname(GetTableMetadataIndivTreatment()$fields)[-1]
-  , options = list(sDom  = '<"top">rt<"bottom">ip)'
-                   #                   autoWidth = TRUE,
+  colnames = c("Cost", "Label", "Frequency", "Duration (min)",
+               "Person 1", "Person 2", "Person 3", "Person 4", "Person 5"),
+   options = list(sDom  = '<"top">rt<"bottom">ip)',
+                                     autoWidth = TRUE
                    #                   columnDefs = list(list(width = '50px', targets = "_all"))
   ) 
   # to suppress search box
@@ -524,11 +527,14 @@ shinyServer(function(input, output, session) {
     input$delete.gr
     if (!is.null(ReadDataGroupTreatment())) {
       ReadDataGroupTreatment() %>%
-        mutate(cost.gr = paste0("$", sprintf("%.0f", round(cost.gr, 0))))
+        mutate(cost.gr = paste0("$", sprintf("%.0f", round(cost.gr, 0)))) %>%
+        select(cost.gr, label.gr, frequency.gr, duration.gr, num.families.gr,
+               person1.gr, person2.gr, person3.gr, person4.gr, person5.gr)
     }
   }, server = FALSE, selection = "single", 
-  colnames = unname(GetTableMetadataGroupTreatment()$fields)[-1]
-  , options = list(sDom  = '<"top">rt<"bottom">ip)') # to suppress search box
+  colnames = c("Cost", "Label", "Frequency", "Duration (min)", "Num. Families",
+               "Person 1", "Person 2", "Person 3", "Person 4", "Person 5"),
+  options = list(sDom  = '<"top">rt<"bottom">ip)') # to suppress search box
   ) 
   
   # Render the DataTable for the Medication data.frame
