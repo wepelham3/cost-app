@@ -7,6 +7,7 @@ CastDataGroupTreatment <- function(data, num.persons.gr = 5) {
                         , num.families.gr = as.integer(data["num.families.gr"])
                         , person1.gr = data["person1.gr"] 
                         , p1.comm.gr = as.integer(data["p1.comm.gr"])
+                        , p1.lead.gr = data["p1.lead.gr"]
                         , person2.gr = if(data["person2.gr"] != "N/A") data["person2.gr"] else ""
                         , p2.comm.gr = as.integer(data["p2.comm.gr"])
                         , person3.gr = if(data["person3.gr"] != "N/A") data["person3.gr"] else ""

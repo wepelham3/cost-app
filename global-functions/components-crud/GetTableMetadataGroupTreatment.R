@@ -8,6 +8,7 @@ GetTableMetadataGroupTreatment <- function(num.persons.gr = 5) {
                 , num.families.gr = "Num Families"
                 , person1.gr = "Person 1"
                 , p1.comm.gr = "P1 Commute"
+                , p1.lead.gr = "P1 Leader"
                 , person2.gr = "Person 2"
                 , p2.comm.gr = "P2 Commute"
                 , person3.gr = "Person 3"

@@ -114,6 +114,7 @@ sidebarLayout(
                                     options = list(placeholder = "Choose a person from the list",
                                                    onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.gr", label = "Person 1 Commute Time (one-way in min)", value = "0"),
+                     checkboxInput(inputId = "p1.lead.gr", label = "Check if Person 1 is leading the group.", value = FALSE),
                      a(id = "add.person2.gr", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
                      tags$br(),
                      tags$br()
