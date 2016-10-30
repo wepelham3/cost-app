@@ -26,9 +26,14 @@ sidebarLayout(
                  title = "Individual Treatment", value = "tab.in",
                  shinyjs::hidden(textInput("id.ind", "Id", "0")),
                  shinyjs::hidden(textInput("cost.ind", "Cost", "0")), #in future try to synchronize
-                 textInput(inputId = "label.ind", label = "Label:"),
-                 textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
-                 textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
+                 textInput(inputId = "label.ind", label = "Label:",
+                           placeholder = "Type a label for this component here (e.g., 'teacher consultation')"),
+                 splitLayout(
+                   textInput(inputId = "frequency.ind", label = "Frequency (per year):", value = 0),
+                   textInput(inputId = "duration.ind", label = "Duration per session (in minutes):", value = "0"),
+                   cellWidths = c("40%", "60%")
+                 ),
+                 hr(),
                  div(id = "p1.ind",
                      selectizeInput(inputId = "person1.ind", label = "Person 1", choices = df.comps$person,
                                     options = list(placeholder = "Choose a person from the list",
@@ -95,16 +100,21 @@ sidebarLayout(
                  title = "Group Treatment", value = "tab.gr",
                  shinyjs::hidden(textInput("id.gr", "Id", "0")),
                  shinyjs::hidden(textInput("cost.gr", "Cost", "0")),
-                 textInput(inputId = "label.gr", label = "Label:"),
-                 textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
-                 textInput(inputId = "duration.gr", label = "Duration per session (in minutes):", value = "0"),
-                 textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "0"),
-                 
+                 textInput(inputId = "label.gr", label = "Label:",
+                           placeholder = "Type a label for this component here (e.g., 'parent training')"),
+                 splitLayout(
+                   textInput(inputId = "frequency.gr", label = "Frequency (per year):", value = 0),
+                   textInput(inputId = "duration.gr", label = "Duration per session (in minutes):", value = "0"),
+                   cellWidths = c("40%", "60%")
+                   ),
+                 textInput(inputId = "num.families.gr", label = "How many children (or families) per group?:", value = "1"),
+                 hr(),
                  div(id = "p1.gr",
                      selectizeInput(inputId = "person1.gr", label = "Person 1", choices = df.comps$person,
                                     options = list(placeholder = "Choose a person from the list",
                                                    onInitialize = I('function() { this.setValue(""); }'))),
                      textInput(inputId = "p1.comm.gr", label = "Person 1 Commute Time (one-way in min)", value = "0"),
+                     checkboxInput(inputId = "p1.lead.gr", label = "Check if Person 1 is leading the group.", value = FALSE),
                      a(id = "add.person2.gr", tags$b("Show/Hide Person 2"), style = "color: #4177b7"),
                      tags$br(),
                      tags$br()
@@ -117,6 +127,7 @@ sidebarLayout(
                                       options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 2, ".comm.gr"), label = paste0("Person ", 2, " Commute, one-way (min)" ), value = "0"),
+                       checkboxInput(inputId = "p2.lead.gr", label = "Check if Person 2 is leading the group.", value = FALSE),
                        a(id = "add.person3.gr", tags$b("Show/Hide Person 3"), style = "color: #4177b7"),
                        tags$br(),
                        tags$br()
@@ -129,6 +140,7 @@ sidebarLayout(
                                       options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 3, ".comm.gr"), label = paste0("Person ", 3, " Commute, one-way (min)" ), value = "0"),
+                       checkboxInput(inputId = "p3.lead.gr", label = "Check if Person 3 is leading the group.", value = FALSE),
                        a(id = "add.person4.gr", tags$b("Show/Hide Person 4"), style = "color: #4177b7"),
                        tags$br(),
                        tags$br()
@@ -141,6 +153,7 @@ sidebarLayout(
                                       options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 4, ".comm.gr"), label = paste0("Person ", 4, " Commute, one-way (min)" ), value = "0"),
+                       checkboxInput(inputId = "p4.lead.gr", label = "Check if Person 4 is leading the group.", value = FALSE),
                        a(id = "add.person5.gr", tags$b("Show/Hide Person 5"), style = "color: #4177b7"),
                        tags$br(),
                        tags$br()
@@ -153,7 +166,7 @@ sidebarLayout(
                                       options = list(placeholder = "Choose a person from the list",
                                                      onInitialize = I('function() { this.setValue(""); }'))),
                        textInput(inputId = paste0("p", 5, ".comm.gr"), label = paste0("Person ", 5, " Commute, one-way (min)" ), value = "0"),
-                       #  a(id = "add.person4.ind", "Add Person"),
+                       checkboxInput(inputId = "p5.lead.gr", label = "Check if Person 5 is leading the group.", value = FALSE),
                        tags$br(),
                        tags$br()
                    )
@@ -201,7 +214,18 @@ sidebarLayout(
                     tags$h5(htmlOutput("people.gr")),
                     
                     # Uncomment for debugging
+                    
+                    #style = "color: white;",
+                    
                     # tableOutput("inputvals")
+                    #tableOutput("mytable.ind.1"),
+                    #tableOutput("mytable.ind.2"),
+                    
+                    #tableOutput("mytable.gr.1"),
+                    #tableOutput("mytable.gr.2"),
+                    #tableOutput("mytable.gr.3"),
+                    
+                    #tableOutput("summary.by.person"),
                     
                     tabsetPanel(type = "pills", id = "out.components",
                                 
@@ -220,7 +244,10 @@ sidebarLayout(
                                 
                                 tabPanel(
                                   title = "Group Treatment", value = "tab.gr", 
+                                  
                                   style = "color: #4177b7;",
+                                  
+                                  
                                   DT::dataTableOutput("data.table.gr.treatment", width = 500),
                                   downloadButton('download.table.gr.treatment', 'Download')
                                   
@@ -243,7 +270,7 @@ sidebarLayout(
             # To change the background, bootstrap's well CSS class
                wellPanel(id ="summary.panel",
                br(),
-                                    
+               fluidRow(tags$h4(em("All numbers reflect cost per child, per year:"))),                   
                tags$style(HTML("
                    table {
                            padding: 30px 0px 0px 0px;
@@ -269,7 +296,7 @@ sidebarLayout(
                     tags$h4(tags$b("Total Costs"), style = "color: #4177b7"),
                                              
                     fluidRow(
-                      splitLayout(cellWidths = c("50%", "50%"), tableOutput('summary_1'), tableOutput('summary_2')),
+                      splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_1'), tableOutput('summary_2')),
                       tags$head(tags$style("#summary_1 table {background-color: yellow; }", media="screen", type="text/css")),
                       tags$style(type="text/css", "#summary_1 tr:last-child {font-weight:bold;}"),
                       tags$head(tags$style("#summary_2 table {background-color: yellow; }", media="screen", type="text/css"))
