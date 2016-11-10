@@ -9,9 +9,19 @@ library(scales)
 
 shinyServer(function(input, output, session) {
   
- #use shiny js 
+  #use shiny js 
   shinyjs::useShinyjs()
   
+  
+  # uncomment for debugging: send all Input Values to the interface
+  
+  #  output$inputvals<-renderTable({
+  #    as.data.frame(reactiveValuesToList(input))
+  #  })
+  
+  
+  
+  #add values to be used in the reactive environment 
   values <- reactiveValues()
   values$med.costs <- GetTotalCostsMedication()
   values$df.summary.ind  <- GetSummaryByIndivTreatment()
@@ -19,30 +29,26 @@ shinyServer(function(input, output, session) {
   values$df.summary.med  <- GetSummaryByMedication()
   
   
-  
   UpdateSummaryByPersonAndParent <- function() {
     
-  # Update the summary by person and parent lists and costs
-  values$df.summary.person  <- GetSummaryByPerson()
-  values$df.summary.parent  <- GetSummaryByParent()
-  values$parent.costs <- sum(GetSummaryByParent()$cost)
-  values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
-  
+    # Update the summary by person and parent lists and costs
+    values$df.summary.person  <- GetSummaryByPerson()
+    values$df.summary.parent  <- GetSummaryByParent()
+    values$parent.costs <- sum(GetSummaryByParent()$cost)
+    values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
+    
   }
+  
+  #####################################################################################################
+  # Uncommment for debugging 
+  #  output$summary.by.person <- renderTable({
+  #      as.data.frame(GetSummaryByPerson())
+  #  })
+  ###################################################################################################
+  
   
   UpdateSummaryByPersonAndParent()
   
-  #values$df.summary.person  <- GetSummaryByPerson()
-  #values$df.summary.parent  <- GetSummaryByParent()
-  #values$parent.costs <- sum(GetSummaryByParent()$cost)
-  #values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
-  
- 
- # uncomment for debugging: send all Input Values to the interface
-  
- #  output$inputvals<-renderTable({
- #    as.data.frame(reactiveValuesToList(input))
- #  })
 
  # Synchronize the Input and Output tabsetPanels
   
@@ -59,30 +65,32 @@ shinyServer(function(input, output, session) {
   })
   
  
-  # Individual Treatments CRUD
+  ###################################################################################################
+  # CRUD for Individual Treatment Components
+  #
+  ###################################################################################################
+ 
   
-  # Indiv. Treatment input fields are treated as a group
+  # Get the current inputs with names defined in the TableMetadata for Individual Treatments
   
   formDataIndivTreatment <- reactive({
     sapply(names(GetTableMetadataIndivTreatment()$fields), function(x) input[[x]])
   })
   
   
-  #$values.component.cost.ind <-
-  
-
- # uncommment for debugging ########################################################################
- #  output$mytable1<-renderTable({
+ #####################################################################################################
+ # Uncommment for debugging 
+ #   output$mytable.ind.1 <- renderTable({
  #      as.data.frame(formDataIndivTreatment())
- #})
- 
- #  output$mytable2<-renderTable({ 
- #     as.data.frame(ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ])
- #  })
+ #   })
+ #
+ #   output$mytable.ind.2<-renderTable({ 
+ #      as.data.frame(ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ])
+ #   })
  ####################################################################################################
   
   
-  # Define here rules for mandatory fields 
+  # Mandatory fields for Individual Treatments
   observe({
     if (is.null(input$label.ind) || input$label.ind == "" || input$frequency.ind == 0
         || input$duration.ind == 0  || input$person1.ind == "" || input$person1.ind == "N/A" ) {
@@ -133,6 +141,7 @@ shinyServer(function(input, output, session) {
   
   # Click "Submit" button to save the data
    observeEvent(input$submit.ind, {
+     
      if (input$id.ind != "0") {
        UpdateDataIndivTreatment(formDataIndivTreatment(), session)
     #  input$cost.ind <-ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ]["cost.ind"]  
@@ -146,12 +155,6 @@ shinyServer(function(input, output, session) {
      # Update the summary by person and parent lists and costs
      
      UpdateSummaryByPersonAndParent()
-     
-     
-    # values$df.summary.person  <- GetSummaryByPerson()
-    # values$df.summary.parent  <- GetSummaryByParent()
-    # values$parent.costs <- sum(GetSummaryByParent()$cost)
-    # values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
      
      # Show/Hide the Download Table Button
      
@@ -168,6 +171,7 @@ shinyServer(function(input, output, session) {
   
   # Select row in table -> show details in inputs
   observeEvent(input$data.table.ind.treatment_rows_selected, {
+    
     if (length(input$data.table.ind.treatment_rows_selected) > 0) {
       data <- ReadDataIndivTreatment()[input$data.table.ind.treatment_rows_selected, ]
       UpdateInputsIndivTreatment(data, session)
@@ -206,12 +210,6 @@ shinyServer(function(input, output, session) {
     
     UpdateSummaryByPersonAndParent()
     
-    #values$df.summary.person  <- GetSummaryByPerson()
-    #values$df.summary.parent  <- GetSummaryByParent()
-    #values$parent.costs <- sum(GetSummaryByParent()$cost)
-    #values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
-    
-    
     # Show/Hide the Download Table Button
     
     if (nrow(ReadDataIndivTreatment()) > 0) { 
@@ -225,25 +223,48 @@ shinyServer(function(input, output, session) {
    
   # Press "Reset" button -> display empty record for IndivTreatment
   observeEvent(input$reset.ind, {
+    
     UpdateInputsIndivTreatment(CreateDefaultIndivTreatment(), session)
     shinyjs::hide(id = "p2.ind", anim = TRUE)
     shinyjs::hide(id = "p3.ind", anim = TRUE)
     shinyjs::hide(id = "p4.ind", anim = TRUE)
     shinyjs::hide(id = "p5.ind", anim = TRUE)
+  
   })
   
  
-  #-----------------------------------------------------------------------------------------------------------------------------------------------
+  ###################################################################################################
+  # CRUD for Group Treatment Components
+  #
+  ###################################################################################################
   
-  #CRUD Group treatment
-  
+  # Get the current inputs with names defined in the TableMetadata for Group Treatments
   
   formDataGroupTreatment <- reactive({
     sapply(names(GetTableMetadataGroupTreatment()$fields), function(x) input[[x]])
   })
   
+  #####################################################################################################
+  # Uncommment for debugging 
+  #  output$mytable.gr.1 <- renderTable({
+  #      as.data.frame(formDataGroupTreatment())
+  #  })
+  #
+  #  output$mytable.gr.2 <- renderTable({ 
+  #     as.data.frame(ReadDataGroupTreatment()[input$data.table.gr.treatment_rows_selected, ])
+  #  })
+  #  
+  #
+  # values$df.gr.treatment = ReadDataGroupTreatment()
+  #  
+  #  output$mytable.gr.3 <- renderTable({ 
+  #    as.data.frame(values$df.gr.treatment)
+  #  })
+    
+    
+  ####################################################################################################
   
-
+  # Mandatory fields for Individual Treatments
   observe({
     if (is.null(input$label.gr) || input$label.gr == "" || input$num.families.gr == 0 || input$frequency.gr == 0
         || input$duration.gr == 0  || input$person1.gr == "" || input$person1.gr == "N/A" )
@@ -294,16 +315,20 @@ shinyServer(function(input, output, session) {
                    shinyjs::toggle(id = "p5.gr", anim = TRUE))
   
   
-  
-  
   # Click "Submit" button to save the data
   observeEvent(input$submit.gr, {
+    
     if (input$id.gr != "0") {
-      UpdateDataGroupTreatment(formDataGroupTreatment(), session)
-    } else { #new record
-      CreateDataGroupTreatment(formDataGroupTreatment())
-      UpdateInputsGroupTreatment(CreateDefaultGroupTreatment(), session)
-    }
+     
+       UpdateDataGroupTreatment(formDataGroupTreatment(), session)
+    
+     } else { #new record
+     
+        CreateDataGroupTreatment(formDataGroupTreatment())
+        UpdateInputsGroupTreatment(CreateDefaultGroupTreatment(), session)
+     }
+    
+    
     values$df.summary.gr  <- GetSummaryByGroupTreatment()
     
     
@@ -311,16 +336,15 @@ shinyServer(function(input, output, session) {
     
     UpdateSummaryByPersonAndParent()
     
-    #values$df.summary.person  <- GetSummaryByPerson()
-    #values$df.summary.parent  <- GetSummaryByParent()
-    #values$parent.costs <- sum(GetSummaryByParent()$cost)
-    #values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
-    
     # Hide/Show the Download button
     if (nrow(ReadDataGroupTreatment()) > 0) { 
+    
       shinyjs::show("download.table.gr.treatment")
+    
     } else {
+      
       shinyjs::hide("download.table.gr.treatment")
+    
     }
     
   }, priority = 1)
@@ -329,8 +353,11 @@ shinyServer(function(input, output, session) {
   
   # Select row in table -> show details in inputs
   observeEvent(input$data.table.gr.treatment_rows_selected, {
+    
     if (length(input$data.table.gr.treatment_rows_selected) > 0) {
+    
       data <- ReadDataGroupTreatment()[input$data.table.gr.treatment_rows_selected, ]
+      
       UpdateInputsGroupTreatment(data, session)
       
       if ( data["person2.gr"] != "" && data["person2.gr"] != "N/A" )
@@ -367,11 +394,6 @@ shinyServer(function(input, output, session) {
     
     # Update the summary by person and parent lists and costs
     
-    #values$df.summary.person  <- GetSummaryByPerson()
-    #values$df.summary.parent  <- GetSummaryByParent()
-    #values$parent.costs <- sum(GetSummaryByParent()$cost)
-    #values$prof.costs <- sum(GetSummaryByPerson()$cost) - sum(GetSummaryByParent()$cost)
-    
     UpdateSummaryByPersonAndParent()
     
     
@@ -386,18 +408,21 @@ shinyServer(function(input, output, session) {
   
   # Press "Reset" button -> display empty record for IndivTreatment
   observeEvent(input$reset.gr, {
+    
+    
     UpdateInputsGroupTreatment(CreateDefaultGroupTreatment(), session)
     shinyjs::hide(id = "p2.gr", anim = TRUE)
     shinyjs::hide(id = "p3.gr", anim = TRUE)
     shinyjs::hide(id = "p4.gr", anim = TRUE)
     shinyjs::hide(id = "p5.gr", anim = TRUE)
+  
   })
  
   
-  #-----------------------------------------------------------------------------------------------------------------------------------------------
-  
-  # CRUD medication table
- 
+  ###################################################################################################
+  # CRUD for Medications
+  #
+  ###################################################################################################
 
   formDataMedication <- reactive({
     sapply(names(GetTableMetadataMedication()$fields), function(x) input[[x]])
@@ -424,6 +449,7 @@ shinyServer(function(input, output, session) {
   
   # Click "Submit" button to save the data
   observeEvent(input$submit.med, {
+    
     if (input$id.med != "0") {
       UpdateDataMedication(formDataMedication())
     } else { #new record
@@ -485,9 +511,10 @@ shinyServer(function(input, output, session) {
     UpdateInputsMedication(CreateDefaultMedication(), session)
 
   })
-  #############################################################
-  ##########      Render DataTables   #########################
-  #############################################################
+  
+  ##################################################################################################
+  # Render DataTables                                                                              #
+  ##################################################################################################
   
   # Render the DataTable for the Individual Treatment data.frame
   output$data.table.ind.treatment <- DT::renderDataTable({
@@ -552,9 +579,9 @@ shinyServer(function(input, output, session) {
   , options = list(sDom  = '<"top">rt<"bottom">ip)') # to suppress search box
   )
    
-  #############################################################
-  ##########      Download Data     ###########################
-  #############################################################
+  ##################################################################################################
+  # Download Data                                                                                  #
+  ##################################################################################################
   
   # disable the download buttons if the dataset is empty
   # it doesn't work for now, need to use some reactive values 
@@ -606,6 +633,10 @@ shinyServer(function(input, output, session) {
   )
   
   
+  ##################################################################################################
+  # Render DataTables for med prices and person wages and compensations                            #
+  ##################################################################################################
+
   # Render DataTable for looking up med prices
   output$DT.lookup.meds = DT::renderDataTable({
     df.meds %>%
@@ -632,101 +663,87 @@ shinyServer(function(input, output, session) {
     })
   
   
-  # Display the summary tables
+  ##################################################################################################
+  # Display the summary tables                                                                     #
+  ##################################################################################################
   
   output$summary_1 <- renderTable({
     
     OutputSummary(GetSummary1(values$med.costs+values$prof.costs, values$parent.costs),  c("", ""))
     
-    
-    #df.summary1 <- as.data.frame(GetSummary1(values$med.costs+values$prof.costs, values$parent.costs))
-    #df.summary1$costs <- comma(df.summary1$costs)
-    #df.summary1$costs <- paste0("$", df.summary1$costs)
-    #df.summary1
-  },
-  include.colnames=FALSE,
-  include.rownames=FALSE)
+    },
+    include.colnames=FALSE,
+    include.rownames=FALSE
+  
+  )
   
   # Summary 2
   output$summary_2 <- renderTable({
     
     OutputSummary(GetSummary2(values$med.costs, values$prof.costs, values$parent.costs),  c("", ""))
     
-    #df.summary2 <-as.data.frame(GetSummary2(values$med.costs, values$prof.costs, values$parent.costs)) 
-    #df.summary2$costs <- comma(df.summary2$costs)
-    #df.summary2$costs <- paste0("$", df.summary2$costs)
-    #df.summary2
-    
-  },
-  include.colnames=FALSE,
-  include.rownames=FALSE)
+    },
+    include.colnames=FALSE,
+    include.rownames=FALSE
+  
+  )
   
   # Individual Components List
   output$summary_3 <- renderTable({
     
     OutputSummary(values$df.summary.ind,  c("By Individual Component", "Cost"))
     
-    #df.summary.ind <- as.data.frame(values$df.summary.ind)
-    #df.summary.ind$cost <- comma(df.summary.ind$cost)
-    #df.summary.ind$cost <- paste0("$", df.summary.ind$cost)
-    #names(df.summary.ind) = c("By Individual Component", "Cost")
-    #df.summary.ind
-    
-  },
-  include.rownames=FALSE)
+    }
+    , include.rownames=FALSE
+  
+  )
   
   # Group Components List
   
   output$summary_4 <- renderTable({
     
     OutputSummary(values$df.summary.gr,  c("By Group Component", "Cost"))
-    
-    #df.summary.gr <- as.data.frame(values$df.summary.gr)
-    #df.summary.gr$cost <- comma(df.summary.gr$cost)
-    #df.summary.gr$cost <- paste0("$", df.summary.gr$cost)
-    #names(df.summary.gr) = c("By Group Component", "Cost")
-    #df.summary.gr
-    
-  },
-  include.rownames=FALSE)
+  
+    }
+  
+    , include.rownames=FALSE
+  )
   
   # Persons List
   
   output$summary_5 <- renderTable({
     
     OutputSummary(values$df.summary.person,  c("By Person", "Cost"))
+ 
+    }
     
-  #  df.persons <- as.data.frame(values$df.summary.person)
-  #  df.persons$cost <- comma(df.persons$cost)
-  #  df.persons$cost <- paste0("$", df.persons$cost)
-  #  names(df.persons) = c("By Person", "Cost")
-  #  df.persons
-  }
-  , include.rownames=FALSE)
+    , include.rownames=FALSE
+  )
   
   # Medication List
   
   output$summary_6 <- renderTable({
-    #df.summary.med <- as.data.frame(values$df.summary.med)
-    OutputSummary(values$df.summary.med,  c("By Medication", "Cost"))
-    #df.summary.med$cost <- comma(df.summary.med$cost)
-    #df.summary.med$cost <- paste0("$", df.summary.med$cost)
-    #names(df.summary.med) = c("By Medication", "Cost")
-    #df.summary.med
-  }
-  , include.rownames=FALSE)
+   
+      OutputSummary(values$df.summary.med,  c("By Medication", "Cost"))
+   
+     }
+    , include.rownames=FALSE
+ 
+  )
   
-  
-  # Download the report
+  ##################################################################################################
+  # Download the protocol report                                                                   #
+  ##################################################################################################
   
   output$download.report <- downloadHandler(
+    
     filename = function() {
       paste("ADHD-CostCalculatorReport", "_", Sys.Date(), sep = ""
             , switch(input$report.format, PDF = '.pdf', HTML = '.html', Word = '.docx'
       ))
     },
     
-    content = function(file) {
+   content = function(file) {
       src <- normalizePath('report.Rmd')
       
       # temporarily switch to the temp dir, in case you do not have write
