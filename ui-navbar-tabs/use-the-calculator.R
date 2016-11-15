@@ -1,5 +1,4 @@
 # calculator page
-
 sidebarLayout(
   sidebarPanel(
 
@@ -244,7 +243,6 @@ sidebarLayout(
                                 
                                 tabPanel(
                                   title = "Group Treatment", value = "tab.gr", 
-                                  
                                   style = "color: #4177b7;",
                                   
                                   
@@ -266,11 +264,16 @@ sidebarLayout(
       ), # close Component List tab
       tabPanel(title = "Summary",
              
-            # Creates a panel with a slightly inset border and grey background. 
-            # To change the background, bootstrap's well CSS class
-               wellPanel(id ="summary.panel",
                br(),
-               fluidRow(tags$h4(em("All numbers reflect cost per child, per year:"))),                   
+               
+               fluidRow(
+                 column(12, offset= 0.5, 
+                    h4(em("  All numbers reflect cost per child, per year:"), style = "color:white")
+                   
+                 )  
+               ),   
+            
+               
                tags$style(HTML("
                    table {
                            padding: 30px 0px 0px 0px;
@@ -293,20 +296,31 @@ sidebarLayout(
 
                 fluidRow(
                   column(12, offset= 0.5,
+                    
                     tags$h4(tags$b("Total Costs"), style = "color: #4177b7"),
                                              
-                    fluidRow(
-                      splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_1'), tableOutput('summary_2')),
-                      tags$head(tags$style("#summary_1 table {background-color: yellow; }", media="screen", type="text/css")),
-                      tags$style(type="text/css", "#summary_1 tr:last-child {font-weight:bold;}"),
-                      tags$head(tags$style("#summary_2 table {background-color: yellow; }", media="screen", type="text/css"))
+                    #fluidRow(
+                     splitLayout(
+                               wellPanel(id ="summary.panel",
+                                tableOutput('summary_1')
+                               ), 
+                              wellPanel(
+                               tableOutput('summary_2')
+                              ),
+                              cellWidths = c("50%", "50%"),
+                      
+                      tags$head(tags$style("#summary_1 table {background-color: #CBA135 }", media="screen", type="text/css")),
+                      
+                      tags$style(type="text/css", "#summary_1 tr:last-child {font-weight:bold; color: white}"),
+                      
+                      tags$head(tags$style("#summary_2 table {background-color: #CBA135}", media="screen", type="text/css"))
                              
                     )
-                  # , br()
-                  # , hr()
                   ) # close column
-                 ), # close fluidRow
-
+                # ) # close fluidRow
+                ), # close wellPanel
+               wellPanel(
+            
                 fluidRow(
                    column(12, offset= 0.5,
                      tags$h4(tags$b("Specific Costs"), style = "color: #4177b7"),
@@ -328,20 +342,43 @@ sidebarLayout(
                       )
                                              
                   ) # close column
-               ),#close fluid row
-               #  wellPanel(
-               
-               radioButtons('report.format', 'Report format', c('PDF', 'HTML', 'Word'),
-                             inline = TRUE),
-               #              tags$head(tags$style("#report.format {color: white}", media="screen", type="text/css")),
-               downloadButton('download.report', 'Download Report')
-
-               
-       ) #close wellPanel
+                 )#close fluid row
+               ), # close wellPanel
+              
+                 fluidRow(
+                   column(12, offset= 0.5,
+                   splitLayout(cellWidths = c("50%", "50%"), 
+                       # download Panel     
+                         wellPanel(       
+                           splitLayout(
+                              radioButtons('report.format', 'Report format', c('PDF', 'HTML', 'Word'),inline = TRUE),
+                              downloadButton('download.report', 'Download Report')
+                              , cellWidths = c("60%", "40%")
+                           ) 
+                           , style = "padding: 20px;"
+                         ), #close Download Panel
+                        # save Panel  
+                         wellPanel(
+                          # actionButton("save.protocol", "Save Protocol"),
+                           # downloadButton('save.protocol', 'Save Current Protocol'),
+                          # shinyjs::hidden(
+                             div(id = "save.protocol.panel",  style = "color: black",
+                                  splitLayout(
+                                   textInput("protocol.name", label = "", value ="Enter the protocol name", width = 300),
+                                   downloadButton("save.protocol", "Save Protocol")
+                                  , cellWidths = c("65%", "35%")
+                                )
+                             )     
+                           , style = "padding: 10px;") #close Save Panel   
+                    )  
+                  )
+                ) 
+      ) 
+                 
      ) # close Summary tab
     ) # close tabsetPanel
   ) # close mainPanel
   
   
-)
+
 #))

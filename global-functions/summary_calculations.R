@@ -2,11 +2,11 @@
 # I. Get Summary 1 - explicit cost, implicit cost, combined cost
 ##########################################################################
 
-GetSummary1 <- function(explicit_costs, implicit_costs) {
+GetSummary1 <- function(explicit.costs, implicit.costs) {
   total.label <- c(" Total explicit cost...",
                    "+ Total implicit cost...",
                    "= Total combined cost...")
-  cost <- c(explicit_costs, implicit_costs, explicit_costs + implicit_costs)
+  cost <- c(explicit.costs, implicit.costs, explicit.costs + implicit.costs)
   df.summary <- data.frame(total.label, cost)
   return(df.summary)
   

@@ -761,7 +761,301 @@ shinyServer(function(input, output, session) {
     }
   )
   
+  ##################################################################################################
+  # Save the protocol to an external RDS file                                                             
+  ##################################################################################################
   
+  output$save.protocol <- downloadHandler(
+    
+    filename = function() { 
+      
+      paste(input$protocol.name, '.rds', sep='') 
+      
+    },
+    
+    content = function(file) {
+     
+       print(file) ##prints: [...]\\Local\\Temp\\RtmpEBYDXT\\fileab8c003878.csv
+      
+       SaveProtocolToRDS(file, input$protocol.name
+                        , values$med.costs+values$prof.costs, values$parent.costs
+                        , values$med.costs, values$prof.costs, values$parent.costs)
+       
+   }
+  )
+  ##########################################################################################
+  # Upload Until 3 Protocols previously saved in RDS files for comparison
+  ##########################################################################################
+  observe({
+    
+    if (!is.null(input$file.protocol1)){
+      
+      protocol.RDSfile <- input$file.protocol1
+      
+      protocol1.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
+      
+      # Protocol Name
+      
+      output$protocol1.name <- renderText({
+        
+        paste0("Protocol Name: ", as.character(protocol1.data$protocol.name))
+        
+      })
+      
+      # Summary 1
+      
+      output$protocol1.summary_1 <- renderTable({
+        
+        OutputSummary(GetSummary1(as.numeric(protocol1.data$total.explicit.cost)
+                                  , as.numeric(protocol1.data$total.explicit.cost)),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      # Summary 2
+      output$protocol1.summary_2 <- renderTable({
+        
+        OutputSummary(GetSummary2(as.numeric(protocol1.data$total.cost.medications)
+                                , as.numeric(protocol1.data$total.cost.professional.time)
+                                , as.numeric(protocol1.data$total.cost.parent.time )),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+     
+      # Individual Components List
+      output$protocol1.summary_3 <- renderTable({
+        
+        OutputSummary(protocol1.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      # Group Components List
+      
+      output$protocol1.summary_4 <- renderTable({
+        
+        OutputSummary(protocol1.data$grp.component.summary,  c("By Group Component", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Persons List
+      
+      output$protocol1.summary_5 <- renderTable({
+        
+        OutputSummary(protocol1.data$person.summary,  c("By Person", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Medication List
+      
+      output$protocol1.summary_6 <- renderTable({
+        
+        OutputSummary(protocol1.data$med.component.summary,  c("By Medication", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+        
+        
+    } 
+    
+    ######################## Load Protocol 2 for Comparison #############################
+    
+    if (!is.null(input$file.protocol2)){
+      
+      protocol.RDSfile <- input$file.protocol2
+      
+      protocol2.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
+      
+      # Protocol Name
+      
+      output$protocol2.name <- renderText({
+        
+        paste0("Protocol Name: ", as.character(protocol2.data$protocol.name))
+        
+      })
+      
+      # Summary 1
+      
+      output$protocol2.summary_1 <- renderTable({
+        
+        OutputSummary(GetSummary1(as.numeric(protocol2.data$total.explicit.cost)
+                                  , as.numeric(protocol2.data$total.explicit.cost)),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      # Summary 2
+      output$protocol2.summary_2 <- renderTable({
+        
+        OutputSummary(GetSummary2(as.numeric(protocol2.data$total.cost.medications)
+                                  , as.numeric(protocol2.data$total.cost.professional.time)
+                                  , as.numeric(protocol2.data$total.cost.parent.time )),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      
+      # Individual Components List
+      output$protocol2.summary_3 <- renderTable({
+        
+        OutputSummary(protocol2.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      # Group Components List
+      
+      output$protocol2.summary_4 <- renderTable({
+        
+        OutputSummary(protocol2.data$grp.component.summary,  c("By Group Component", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Persons List
+      
+      output$protocol2.summary_5 <- renderTable({
+        
+        OutputSummary(protocol2.data$person.summary,  c("By Person", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Medication List
+      
+      output$protocol2.summary_6 <- renderTable({
+        
+        OutputSummary(protocol2.data$med.component.summary,  c("By Medication", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      
+    } 
+    
+    ######################## Load Protocol 3 for Comparison #############################
+    
+    if (!is.null(input$file.protocol3)){
+      
+      protocol.RDSfile <- input$file.protocol3
+      
+      protocol3.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
+      
+      # Protocol Name
+      
+      output$protocol3.name <- renderText({
+        
+        paste0("Protocol Name: ", as.character(protocol3.data$protocol.name))
+        
+      })
+      
+      # Summary 1
+      
+      output$protocol3.summary_1 <- renderTable({
+        
+        OutputSummary(GetSummary1(as.numeric(protocol3.data$total.explicit.cost)
+                                  , as.numeric(protocol3.data$total.explicit.cost)),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      # Summary 2
+      output$protocol3.summary_2 <- renderTable({
+        
+        OutputSummary(GetSummary2(as.numeric(protocol3.data$total.cost.medications)
+                                  , as.numeric(protocol3.data$total.cost.professional.time)
+                                  , as.numeric(protocol3.data$total.cost.parent.time )),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      
+      # Individual Components List
+      output$protocol3.summary_3 <- renderTable({
+        
+        OutputSummary(protocol3.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      # Group Components List
+      
+      output$protocol3.summary_4 <- renderTable({
+        
+        OutputSummary(protocol3.data$grp.component.summary,  c("By Group Component", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Persons List
+      
+      output$protocol3.summary_5 <- renderTable({
+        
+        OutputSummary(protocol3.data$person.summary,  c("By Person", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Medication List
+      
+      output$protocol3.summary_6 <- renderTable({
+        
+        OutputSummary(protocol3.data$med.component.summary,  c("By Medication", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      
+    } 
+    
+    
+  })    
   
+    
 })
 
