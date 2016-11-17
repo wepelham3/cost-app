@@ -307,7 +307,7 @@ sidebarLayout(
                               wellPanel(
                                tableOutput('summary_2')
                               ),
-                              cellWidths = c("50%", "50%"),
+                              cellWidths = c("40%", "60%"),
                       
                       tags$head(tags$style("#summary_1 table {background-color: #CBA135 }", media="screen", type="text/css")),
                       
@@ -319,60 +319,70 @@ sidebarLayout(
                   ) # close column
                 # ) # close fluidRow
                 ), # close wellPanel
-               wellPanel(
+              wellPanel(
             
                 fluidRow(
                    column(12, offset= 0.5,
                      tags$h4(tags$b("Specific Costs"), style = "color: #4177b7"),
                    
-                     fluidRow(
+                   #  fluidRow(
                     
-                       splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_3'), tableOutput('summary_4')),
-                       tags$head(tags$style("#summary_3 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
-                       tags$head(tags$style("#summary_4 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
-                              
-                      ),
-                      br(),
-                      fluidRow(
-                                               
-                        splitLayout(cellWidths = c("40%", "60%"), tableOutput('summary_5'), tableOutput('summary_6')),
-                        tags$head(tags$style("#summary_5 table {background-color: white; width: 300px;}", media="screen", type="text/css")),
-                        tags$head(tags$style("#summary_6 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
-                                               
-                      )
-                                             
+                       splitLayout(cellWidths = c("40%", "60%"),
+                        
+                        wellPanel(             
+                            tableOutput('summary_3')
+                          , tableOutput('summary_4')
+                          , tags$head(tags$style("#summary_3 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                          , tags$head(tags$style("#summary_4 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                        ),
+                   
+                        wellPanel(
+                            tableOutput('summary_5')
+                          , tableOutput('summary_6')
+                          , tags$head(tags$style("#summary_5 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                          , tags$head(tags$style("#summary_6 table {background-color: white; width: 300px;}", media="screen", type="text/css"))
+                       )
+                    )# closse splitLayout   
                   ) # close column
-                 )#close fluid row
-               ), # close wellPanel
+                 ) #close fluid row
+                ), # close wellPanel
               
                  fluidRow(
                    column(12, offset= 0.5,
-                   splitLayout(cellWidths = c("50%", "50%"), 
+                   splitLayout(cellWidths = c("40%", "60%"), 
                        # download Panel     
                          wellPanel(       
-                           splitLayout(
+                          # splitLayout(
+                              br(),
                               radioButtons('report.format', 'Report format', c('PDF', 'HTML', 'Word'),inline = TRUE),
-                              downloadButton('download.report', 'Download Report')
-                              , cellWidths = c("60%", "40%")
-                           ) 
-                           , style = "padding: 20px;"
+                              downloadButton('download.report', 'Download Report'),
+                              br()
+                              
+                           #   , cellWidths = c("60%", "40%")
+                           #) 
+                         #  , style = "padding: 100px;"
                          ), #close Download Panel
                         # save Panel  
                          wellPanel(
-                          # actionButton("save.protocol", "Save Protocol"),
-                           # downloadButton('save.protocol', 'Save Current Protocol'),
-                          # shinyjs::hidden(
-                             div(id = "save.protocol.panel",  style = "color: black",
-                                  splitLayout(
-                                   textInput("protocol.name", label = "", value ="Enter the protocol name", width = 300),
-                                   downloadButton("save.protocol", "Save Protocol")
-                                  , cellWidths = c("65%", "35%")
-                                )
-                             )     
-                           , style = "padding: 10px;") #close Save Panel   
+                             fluidRow(
+                                  column(6, offset = 3),
+                                  textInput("protocol.name", label = "", value ="Enter the protocol name here", width = 450)         
+                  
+                              ), 
+                             splitLayout(
+                                  actionButton(inputId = "save.protocol", label = "Save Protocol for Comparison", icon = icon("save")),
+                                 
+                                  downloadButton("save.protocol.RDS", "Save Protocol to your Computer", class ="butt1"),
+                                  # style font family as well in addition to background and font color
+                                  # tags$head(tags$style(".butt1{background-color:orange;} .butt1{color: black;} .butt1{font-family: Courier New}")),  
+                                  
+                                  cellWidths = c("50%", "50%")
+                             )
+                          # , style = "padding: 10px;"
+                           ) #close Save Panel   
                     )  
                   )
-                ) 
+                ) # close fluidRow 
       ) 
                  
      ) # close Summary tab

@@ -762,10 +762,35 @@ shinyServer(function(input, output, session) {
   )
   
   ##################################################################################################
+  # Save the protocol to an internal data object list for future comparison                                                       
+  ##################################################################################################
+  
+  observeEvent(input$save.protocol, {
+    
+    if (input$save.protocol != "0") {
+  
+      # Cast Protocol data
+      values$protocol.data <- CastProtocolData(input$protocol.name
+                                        , values$med.costs+values$prof.costs, values$parent.costs
+                                        , values$med.costs, values$prof.costs, values$parent.costs)
+      
+      print(values$protocol.data)
+      
+      
+      #updateNavbarPage(id="main.nav.bar", selected = "Compare protocols") #it doesn't work
+      
+    }
+    
+    
+  })
+  
+  
+  
+  ##################################################################################################
   # Save the protocol to an external RDS file                                                             
   ##################################################################################################
   
-  output$save.protocol <- downloadHandler(
+  output$save.protocol.RDS <- downloadHandler(
     
     filename = function() { 
       
@@ -781,107 +806,337 @@ shinyServer(function(input, output, session) {
                         , values$med.costs+values$prof.costs, values$parent.costs
                         , values$med.costs, values$prof.costs, values$parent.costs)
        
-   }
-  )
-  ##########################################################################################
-  # Upload Until 3 Protocols previously saved in RDS files for comparison
-  ##########################################################################################
+  })
+  
   observe({
+  
+  #   
+  #   if(length(values$protocol.data) == 0){
+  #     
+  #     shinyjs::show(id = "empty.protocol1")
+  #     shinyjs::show(id = "empty.protocol2")
+  #     shinyjs::show(id = "empty.protocol3")
+  #     
+  #   
+  #   }  
+  #   
+  #   else {
+  #     
+  #     shinyjs::hide(id = "empty.protocol1") 
+  #     shinyjs::hide(id = "empty.protocol2")
+  #     shinyjs::hide(id = "empty.protocol3")
+  #     
+  #   } 
+  # 
+      
     
-    if (!is.null(input$file.protocol1)){
+    if (input$upload.options.prt1 == "upload.from.rds"){
+       
+       if (!is.null(input$file.protocol1))
+         shinyjs::enable("upload.protocol1")
+       else 
+         shinyjs::disable("upload.protocol1")
+     }   
+     
+    else # if (input$upload.options.prt2 == "upload.just.saved" )
+ 
+      {
+       
+       if(length(values$protocol.data) > 0)
       
-      protocol.RDSfile <- input$file.protocol1
-      
-      protocol1.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
-      
-      # Protocol Name
-      
-      output$protocol1.name <- renderText({
+           shinyjs::enable("upload.protocol1")
+    
+       else 
         
-        paste0("Protocol Name: ", as.character(protocol1.data$protocol.name))
-        
-      })
+         shinyjs::disable("upload.protocol1")
+      }  
+    
+    
+     
+    if (input$upload.options.prt2 == "upload.from.rds"){
       
-      # Summary 1
+      if (!is.null(input$file.protocol2))
+        shinyjs::enable("upload.protocol2")
+      else 
+        shinyjs::disable("upload.protocol2")
+    }   
+    
+    else # if (input$upload.options.prt2 == "upload.just.saved" )
       
-      output$protocol1.summary_1 <- renderTable({
-        
-        OutputSummary(GetSummary1(as.numeric(protocol1.data$total.explicit.cost)
-                                  , as.numeric(protocol1.data$total.explicit.cost)),  c("", ""))
-        
-      },
-      include.colnames=FALSE,
-      include.rownames=FALSE
+    {
       
-      )
-      
-      # Summary 2
-      output$protocol1.summary_2 <- renderTable({
+      if(length(values$protocol.data) > 0)
         
-        OutputSummary(GetSummary2(as.numeric(protocol1.data$total.cost.medications)
+        shinyjs::enable("upload.protocol2")
+      
+      else 
+        
+        shinyjs::disable("upload.protocol2")
+    }
+    
+    
+    if (input$upload.options.prt3 == "upload.from.rds"){
+      
+      if (!is.null(input$file.protocol3))
+        shinyjs::enable("upload.protocol3")
+      else 
+        shinyjs::disable("upload.protocol3")
+    }   
+    
+    else # if (input$upload.options.prt3 == "upload.just.saved" )
+      
+    {
+      
+      if(length(values$protocol.data) > 0)
+        
+        shinyjs::enable("upload.protocol3")
+      
+      else 
+        
+        shinyjs::disable("upload.protocol3")
+    }
+    
+    
+    
+    
+ })
+  
+  
+  
+  ##########################################################################################
+  # Upload the protocol previously saved or from an RDS files for comparison to 
+  # the 1th Protocol Panel for Comparison
+  ##########################################################################################
+  
+  observeEvent(input$upload.options.prt1, {
+               
+   if(input$upload.options.prt1 == "upload.from.rds"){
+   
+     shinyjs::show(id = "RDSfile1")
+     shinyjs::hide(id = "empty.protocol1")
+     
+   }   
+   
+    else { # input$upload.options.prt1 == "upload.just.saved"
+    
+     shinyjs::hide(id = "RDSfile1")
+     
+     if(length(values$protocol.data) == 0){
+       
+         print("The list is empty")
+         shinyjs::show(id = "empty.protocol1")
+        
+      } 
+      
+      else{
+          
+         shinyjs::hide(id = "empty.protocol1")
+        
+     }
+   
+    }  
+    
+    print(input$upload.options.prt1)
+    
+  })    
+  
+
+  
+  observeEvent(input$upload.protocol1, {
+    
+    if (input$upload.protocol1 != "0") {
+      
+      # upload from the just-saved protocol or from an external file
+      
+      if(input$upload.options.prt1 == "upload.just.saved")
+    
+         protocol1.data <- values$protocol.data 
+    
+        else # input$upload.options.prt1 = "upload.from.rds"
+    
+         {
+       
+           if (!is.null(input$file.protocol1)){
+             
+             protocol1.data <- UploadProtocolFromRDSToList(input$file.protocol1)
+             shinyjs::hide(id = "RDSfile1")
+         }
+       
+        } # close else
+    
+      
+    if(length(protocol1.data) == 0){
+      
+      print("The list is empty")
+      
+      shinyjs::show(id = "empty.protocol1")
+      
+      return()
+      
+    }
+    
+  
+    shinyjs::hide(id = "empty.protocol1")  
+      
+    # Protocol Name
+
+    output$protocol1.name <- renderText({
+
+      paste0("Protocol Name: ", as.character(protocol1.data$protocol.name))
+
+    })
+
+    # Summary 1
+
+    output$protocol1.summary_1 <- renderTable({
+
+      OutputSummary(GetSummary1(as.numeric(protocol1.data$total.explicit.cost)
+                                , as.numeric(protocol1.data$total.implicit.cost)),  c("", ""))
+
+    },
+    include.colnames=FALSE,
+    include.rownames=FALSE
+
+    )
+
+    # Summary 2
+    output$protocol1.summary_2 <- renderTable({
+
+      OutputSummary(GetSummary2(as.numeric(protocol1.data$total.cost.medications)
                                 , as.numeric(protocol1.data$total.cost.professional.time)
                                 , as.numeric(protocol1.data$total.cost.parent.time )),  c("", ""))
-        
-      },
-      include.colnames=FALSE,
-      include.rownames=FALSE
-      
-      )
-      
-     
-      # Individual Components List
-      output$protocol1.summary_3 <- renderTable({
-        
-        OutputSummary(protocol1.data$ind.component.summary,  c("By Individual Component", "Cost"))
-        
-      }
-      , include.rownames=FALSE
-      
-      )
-      
-      # Group Components List
-      
-      output$protocol1.summary_4 <- renderTable({
-        
-        OutputSummary(protocol1.data$grp.component.summary,  c("By Group Component", "Cost"))
-        
-      }
-      
-      , include.rownames=FALSE
-      )
-      
-      # Persons List
-      
-      output$protocol1.summary_5 <- renderTable({
-        
-        OutputSummary(protocol1.data$person.summary,  c("By Person", "Cost"))
-        
-      }
-      
-      , include.rownames=FALSE
-      )
-      
-      # Medication List
-      
-      output$protocol1.summary_6 <- renderTable({
-        
-        OutputSummary(protocol1.data$med.component.summary,  c("By Medication", "Cost"))
-        
-      }
-      , include.rownames=FALSE
-      
-      )
-        
-        
-    } 
+
+    },
+    include.colnames=FALSE,
+    include.rownames=FALSE
+
+    )
+
+
+    # Individual Components List
+    output$protocol1.summary_3 <- renderTable({
+
+      OutputSummary(protocol1.data$ind.component.summary,  c("By Individual Component", "Cost"))
+
+    }
+    , include.rownames=FALSE
+
+    )
+
+    # Group Components List
+
+    output$protocol1.summary_4 <- renderTable({
+
+      OutputSummary(protocol1.data$grp.component.summary,  c("By Group Component", "Cost"))
+
+    }
+
+    , include.rownames=FALSE
+    )
+
+    # Persons List
+
+    output$protocol1.summary_5 <- renderTable({
+
+      OutputSummary(protocol1.data$person.summary,  c("By Person", "Cost"))
+
+    }
+
+    , include.rownames=FALSE
+
+    )
+
+    # Medication List
+
+    output$protocol1.summary_6 <- renderTable({
+
+      OutputSummary(protocol1.data$med.component.summary,  c("By Medication", "Cost"))
+
+    }
+    , include.rownames=FALSE
+
+    )
+
+    }# close input.upload.protocol1
+
+  }) # close observe if(input$upload.options.prt1 = "upload.just.saved")
+
+  ##########################################################################################
+  # Upload the protocol previously saved or from an RDS files for comparison to 
+  # the 2-nd Protocol Panel for Comparison
+  ##########################################################################################
+  
+  observeEvent(input$upload.options.prt2, {
     
-    ######################## Load Protocol 2 for Comparison #############################
+    if(input$upload.options.prt2 == "upload.from.rds"){
+      
+      shinyjs::show(id = "RDSfile2")
+      shinyjs::hide(id = "empty.protocol2")
+      
+    }   
     
-    if (!is.null(input$file.protocol2)){
+    else { # input$upload.options.prt1 == "upload.just.saved"
       
-      protocol.RDSfile <- input$file.protocol2
+      shinyjs::hide(id = "RDSfile2")
       
-      protocol2.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
+      if(length(values$protocol.data) == 0){
+        
+        print("The list is empty")
+        shinyjs::show(id = "empty.protocol2")
+        
+      } 
+      
+      else{
+        
+        shinyjs::hide(id = "empty.protocol2")
+        
+      }
+      
+    }  
+    
+    print(input$upload.options.prt2)
+    
+    
+  })    
+  
+  
+  
+  observeEvent(input$upload.protocol2, {
+    
+    if (input$upload.protocol2 != "0") {
+      
+      # upload from the just-saved protocol or from an external file
+      
+      if(input$upload.options.prt2 == "upload.just.saved")
+        
+        protocol2.data <- values$protocol.data 
+      
+      else # input$upload.options.prt1 = "upload.from.rds"
+        
+      {
+        
+        if (!is.null(input$file.protocol2)){
+          
+          protocol2.data <- UploadProtocolFromRDSToList(input$file.protocol2)
+          shinyjs::hide(id = "RDSfile2")
+          
+        }
+        
+      } # close else
+      
+      
+      if(length(protocol2.data) == 0){
+        
+        print("The list is empty")
+        
+        shinyjs::show(id = "empty.protocol2")
+        
+        return()
+        
+      }
+      
+      
+      shinyjs::hide(id = "empty.protocol2")  
       
       # Protocol Name
       
@@ -896,7 +1151,7 @@ shinyServer(function(input, output, session) {
       output$protocol2.summary_1 <- renderTable({
         
         OutputSummary(GetSummary1(as.numeric(protocol2.data$total.explicit.cost)
-                                  , as.numeric(protocol2.data$total.explicit.cost)),  c("", ""))
+                                  , as.numeric(protocol2.data$total.implicit.cost)),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -948,6 +1203,7 @@ shinyServer(function(input, output, session) {
       }
       
       , include.rownames=FALSE
+      
       )
       
       # Medication List
@@ -961,16 +1217,87 @@ shinyServer(function(input, output, session) {
       
       )
       
-      
-    } 
+    }# close input.upload.protocol2
     
-    ######################## Load Protocol 3 for Comparison #############################
+  }) # close observe if(input$upload.options.prt2 = "upload.just.saved")
+  
+  
+  ##########################################################################################
+  # Upload the protocol previously saved or from an RDS files for comparison to 
+  # the 3-rd Protocol Panel for Comparison
+  ##########################################################################################
+  
+  observeEvent(input$upload.options.prt3, {
     
-    if (!is.null(input$file.protocol3)){
+    if(input$upload.options.prt3 == "upload.from.rds"){
       
-      protocol.RDSfile <- input$file.protocol3
+      shinyjs::show(id = "RDSfile3")
+      shinyjs::hide(id = "empty.protocol3")
       
-      protocol3.data <- UploadProtocolFromRDSToList(protocol.RDSfile)
+    }   
+    
+    else { # input$upload.options.prt1 == "upload.just.saved"
+      
+      shinyjs::hide(id = "RDSfile3")
+      
+      if(length(values$protocol.data) == 0){
+        
+        print("The list is empty")
+        shinyjs::show(id = "empty.protocol3")
+        
+      } 
+      
+      else{
+        
+        shinyjs::hide(id = "empty.protocol3")
+        
+      }
+      
+    }  
+    
+    print(input$upload.options.prt3)
+    
+    
+  })    
+  
+  
+  
+  observeEvent(input$upload.protocol3, {
+    
+    if (input$upload.protocol3 != "0") {
+      
+      # upload from the just-saved protocol or from an external file
+      
+      if(input$upload.options.prt3 == "upload.just.saved")
+        
+        protocol3.data <- values$protocol.data 
+      
+      else # input$upload.options.prt1 = "upload.from.rds"
+        
+      {
+        
+        if (!is.null(input$file.protocol3)){
+          
+          protocol3.data <- UploadProtocolFromRDSToList(input$file.protocol3)
+          shinyjs::hide(id = "RDSfile3")
+          
+        }
+        
+      } # close else
+      
+      
+      if(length(protocol3.data) == 0){
+        
+        print("The list is empty")
+        
+        shinyjs::show(id = "empty.protocol3")
+        
+        return()
+        
+      }
+      
+      
+      shinyjs::hide(id = "empty.protocol3")  
       
       # Protocol Name
       
@@ -985,7 +1312,7 @@ shinyServer(function(input, output, session) {
       output$protocol3.summary_1 <- renderTable({
         
         OutputSummary(GetSummary1(as.numeric(protocol3.data$total.explicit.cost)
-                                  , as.numeric(protocol3.data$total.explicit.cost)),  c("", ""))
+                                  , as.numeric(protocol3.data$total.implicit.cost)),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -1037,6 +1364,7 @@ shinyServer(function(input, output, session) {
       }
       
       , include.rownames=FALSE
+      
       )
       
       # Medication List
@@ -1050,11 +1378,9 @@ shinyServer(function(input, output, session) {
       
       )
       
-      
-    } 
+    }# close input.upload.protocol3
     
-    
-  })    
+  }) # close observe if(input$upload.options.prt3 = "upload.just.saved")
   
     
 })

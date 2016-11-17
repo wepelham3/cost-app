@@ -22,10 +22,11 @@ shinyUI(fluidPage(
       ),
 
   
-  navbarPage(title = div(img(src="ccf.png", style = "height: 50%; width: 50%; padding: 0px 30px 0px 5px;", align = "top"), "Cost of Treatment Calculator"),
-             
-             selected = "About the app",
-             fluid = TRUE,
+  navbarPage(id="main.nav.bar"
+                 , title = div(img(src="ccf.png", style = "height: 50%; width: 50%; padding: 0px 30px 0px 5px;", align = "top")
+                 , "Cost of Treatment Calculator")
+                 , selected = "About the app"
+                 , fluid = TRUE,
              
              # fix the navbar to always show and provide padding so it doesn't overlay the panels
              position = "fixed-top",
