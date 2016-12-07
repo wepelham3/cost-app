@@ -5,6 +5,7 @@ library(readr)
 library(DT)
 library(shinyjs)
 library(scales)
+library(ggplot2)
 
 
 shinyServer(function(input, output, session) {
@@ -810,26 +811,7 @@ shinyServer(function(input, output, session) {
   
   observe({
   
-  #   
-  #   if(length(values$protocol.data) == 0){
-  #     
-  #     shinyjs::show(id = "empty.protocol1")
-  #     shinyjs::show(id = "empty.protocol2")
-  #     shinyjs::show(id = "empty.protocol3")
-  #     
-  #   
-  #   }  
-  #   
-  #   else {
-  #     
-  #     shinyjs::hide(id = "empty.protocol1") 
-  #     shinyjs::hide(id = "empty.protocol2")
-  #     shinyjs::hide(id = "empty.protocol3")
-  #     
-  #   } 
-  # 
-      
-    
+ 
     if (input$upload.options.prt1 == "upload.from.rds"){
        
        if (!is.null(input$file.protocol1))
@@ -949,118 +931,118 @@ shinyServer(function(input, output, session) {
       # upload from the just-saved protocol or from an external file
       
       if(input$upload.options.prt1 == "upload.just.saved")
-    
-         protocol1.data <- values$protocol.data 
-    
-        else # input$upload.options.prt1 = "upload.from.rds"
-    
-         {
-       
-           if (!is.null(input$file.protocol1)){
-             
-             protocol1.data <- UploadProtocolFromRDSToList(input$file.protocol1)
-             shinyjs::hide(id = "RDSfile1")
-         }
-       
-        } # close else
-    
+        
+        values$protocol1.data <- values$protocol.data 
       
-    if(length(protocol1.data) == 0){
+      else # input$upload.options.prt1 = "upload.from.rds"
+        
+      {
+        
+        if (!is.null(input$file.protocol1)){
+          
+          values$protocol1.data <- UploadProtocolFromRDSToList(input$file.protocol1)
+          shinyjs::hide(id = "RDSfile1")
+        }
+        
+      } # close else
       
-      print("The list is empty")
       
-      shinyjs::show(id = "empty.protocol1")
+      if(length(values$protocol1.data) == 0){
+        
+        print("The list is empty")
+        
+        shinyjs::show(id = "empty.protocol1")
+        
+        return()
+        
+      }
       
-      return()
       
-    }
-    
-  
-    shinyjs::hide(id = "empty.protocol1")  
+      shinyjs::hide(id = "empty.protocol1")  
       
-    # Protocol Name
-
-    output$protocol1.name <- renderText({
-
-      paste0("Protocol Name: ", as.character(protocol1.data$protocol.name))
-
-    })
-
-    # Summary 1
-
-    output$protocol1.summary_1 <- renderTable({
-
-      OutputSummary(GetSummary1(as.numeric(protocol1.data$total.explicit.cost)
-                                , as.numeric(protocol1.data$total.implicit.cost)),  c("", ""))
-
-    },
-    include.colnames=FALSE,
-    include.rownames=FALSE
-
-    )
-
-    # Summary 2
-    output$protocol1.summary_2 <- renderTable({
-
-      OutputSummary(GetSummary2(as.numeric(protocol1.data$total.cost.medications)
-                                , as.numeric(protocol1.data$total.cost.professional.time)
-                                , as.numeric(protocol1.data$total.cost.parent.time )),  c("", ""))
-
-    },
-    include.colnames=FALSE,
-    include.rownames=FALSE
-
-    )
-
-
-    # Individual Components List
-    output$protocol1.summary_3 <- renderTable({
-
-      OutputSummary(protocol1.data$ind.component.summary,  c("By Individual Component", "Cost"))
-
-    }
-    , include.rownames=FALSE
-
-    )
-
-    # Group Components List
-
-    output$protocol1.summary_4 <- renderTable({
-
-      OutputSummary(protocol1.data$grp.component.summary,  c("By Group Component", "Cost"))
-
-    }
-
-    , include.rownames=FALSE
-    )
-
-    # Persons List
-
-    output$protocol1.summary_5 <- renderTable({
-
-      OutputSummary(protocol1.data$person.summary,  c("By Person", "Cost"))
-
-    }
-
-    , include.rownames=FALSE
-
-    )
-
-    # Medication List
-
-    output$protocol1.summary_6 <- renderTable({
-
-      OutputSummary(protocol1.data$med.component.summary,  c("By Medication", "Cost"))
-
-    }
-    , include.rownames=FALSE
-
-    )
-
+      # Protocol Name
+      
+      output$protocol1.name <- renderText({
+        
+        paste0("Protocol Name: ", as.character(values$protocol1.data$protocol.name))
+        
+      })
+      
+      # Summary 1
+      
+      output$protocol1.summary_1 <- renderTable({
+        
+        OutputSummary(GetSummary1(as.numeric(values$protocol1.data$total.explicit.cost)
+                                  , as.numeric(values$protocol1.data$total.implicit.cost)),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      # Summary 2
+      output$protocol1.summary_2 <- renderTable({
+        
+        OutputSummary(GetSummary2(as.numeric(values$protocol1.data$total.cost.medications)
+                                  , as.numeric(values$protocol1.data$total.cost.professional.time)
+                                  , as.numeric(values$protocol1.data$total.cost.parent.time )),  c("", ""))
+        
+      },
+      include.colnames=FALSE,
+      include.rownames=FALSE
+      
+      )
+      
+      
+      # Individual Components List
+      output$protocol1.summary_3 <- renderTable({
+        
+        OutputSummary(values$protocol1.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
+      # Group Components List
+      
+      output$protocol1.summary_4 <- renderTable({
+        
+        OutputSummary(values$protocol1.data$grp.component.summary,  c("By Group Component", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      )
+      
+      # Persons List
+      
+      output$protocol1.summary_5 <- renderTable({
+        
+        OutputSummary(values$protocol1.data$person.summary,  c("By Person", "Cost"))
+        
+      }
+      
+      , include.rownames=FALSE
+      
+      )
+      
+      # Medication List
+      
+      output$protocol1.summary_6 <- renderTable({
+        
+        OutputSummary(values$protocol1.data$med.component.summary,  c("By Medication", "Cost"))
+        
+      }
+      , include.rownames=FALSE
+      
+      )
+      
     }# close input.upload.protocol1
-
+    
   }) # close observe if(input$upload.options.prt1 = "upload.just.saved")
-
+  
   ##########################################################################################
   # Upload the protocol previously saved or from an RDS files for comparison to 
   # the 2-nd Protocol Panel for Comparison
@@ -1109,7 +1091,7 @@ shinyServer(function(input, output, session) {
       
       if(input$upload.options.prt2 == "upload.just.saved")
         
-        protocol2.data <- values$protocol.data 
+        values$protocol2.data <- values$protocol.data 
       
       else # input$upload.options.prt1 = "upload.from.rds"
         
@@ -1117,7 +1099,7 @@ shinyServer(function(input, output, session) {
         
         if (!is.null(input$file.protocol2)){
           
-          protocol2.data <- UploadProtocolFromRDSToList(input$file.protocol2)
+          values$protocol2.data <- UploadProtocolFromRDSToList(input$file.protocol2)
           shinyjs::hide(id = "RDSfile2")
           
         }
@@ -1125,7 +1107,7 @@ shinyServer(function(input, output, session) {
       } # close else
       
       
-      if(length(protocol2.data) == 0){
+      if(length(values$protocol2.data) == 0){
         
         print("The list is empty")
         
@@ -1142,7 +1124,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol2.name <- renderText({
         
-        paste0("Protocol Name: ", as.character(protocol2.data$protocol.name))
+        paste0("Protocol Name: ", as.character(values$protocol2.data$protocol.name))
         
       })
       
@@ -1150,8 +1132,8 @@ shinyServer(function(input, output, session) {
       
       output$protocol2.summary_1 <- renderTable({
         
-        OutputSummary(GetSummary1(as.numeric(protocol2.data$total.explicit.cost)
-                                  , as.numeric(protocol2.data$total.implicit.cost)),  c("", ""))
+        OutputSummary(GetSummary1(as.numeric(values$protocol2.data$total.explicit.cost)
+                                  , as.numeric(values$protocol2.data$total.implicit.cost)),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -1162,9 +1144,9 @@ shinyServer(function(input, output, session) {
       # Summary 2
       output$protocol2.summary_2 <- renderTable({
         
-        OutputSummary(GetSummary2(as.numeric(protocol2.data$total.cost.medications)
-                                  , as.numeric(protocol2.data$total.cost.professional.time)
-                                  , as.numeric(protocol2.data$total.cost.parent.time )),  c("", ""))
+        OutputSummary(GetSummary2(as.numeric(values$protocol2.data$total.cost.medications)
+                                  , as.numeric(values$protocol2.data$total.cost.professional.time)
+                                  , as.numeric(values$protocol2.data$total.cost.parent.time )),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -1176,7 +1158,7 @@ shinyServer(function(input, output, session) {
       # Individual Components List
       output$protocol2.summary_3 <- renderTable({
         
-        OutputSummary(protocol2.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        OutputSummary(values$protocol2.data$ind.component.summary,  c("By Individual Component", "Cost"))
         
       }
       , include.rownames=FALSE
@@ -1187,7 +1169,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol2.summary_4 <- renderTable({
         
-        OutputSummary(protocol2.data$grp.component.summary,  c("By Group Component", "Cost"))
+        OutputSummary(values$protocol2.data$grp.component.summary,  c("By Group Component", "Cost"))
         
       }
       
@@ -1198,7 +1180,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol2.summary_5 <- renderTable({
         
-        OutputSummary(protocol2.data$person.summary,  c("By Person", "Cost"))
+        OutputSummary(values$protocol2.data$person.summary,  c("By Person", "Cost"))
         
       }
       
@@ -1210,7 +1192,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol2.summary_6 <- renderTable({
         
-        OutputSummary(protocol2.data$med.component.summary,  c("By Medication", "Cost"))
+        OutputSummary(values$protocol2.data$med.component.summary,  c("By Medication", "Cost"))
         
       }
       , include.rownames=FALSE
@@ -1270,7 +1252,7 @@ shinyServer(function(input, output, session) {
       
       if(input$upload.options.prt3 == "upload.just.saved")
         
-        protocol3.data <- values$protocol.data 
+        values$protocol3.data <- values$protocol.data 
       
       else # input$upload.options.prt1 = "upload.from.rds"
         
@@ -1278,7 +1260,7 @@ shinyServer(function(input, output, session) {
         
         if (!is.null(input$file.protocol3)){
           
-          protocol3.data <- UploadProtocolFromRDSToList(input$file.protocol3)
+          values$protocol3.data <- UploadProtocolFromRDSToList(input$file.protocol3)
           shinyjs::hide(id = "RDSfile3")
           
         }
@@ -1286,7 +1268,7 @@ shinyServer(function(input, output, session) {
       } # close else
       
       
-      if(length(protocol3.data) == 0){
+      if(length(values$protocol3.data) == 0){
         
         print("The list is empty")
         
@@ -1303,7 +1285,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol3.name <- renderText({
         
-        paste0("Protocol Name: ", as.character(protocol3.data$protocol.name))
+        paste0("Protocol Name: ", as.character(values$protocol3.data$protocol.name))
         
       })
       
@@ -1311,8 +1293,8 @@ shinyServer(function(input, output, session) {
       
       output$protocol3.summary_1 <- renderTable({
         
-        OutputSummary(GetSummary1(as.numeric(protocol3.data$total.explicit.cost)
-                                  , as.numeric(protocol3.data$total.implicit.cost)),  c("", ""))
+        OutputSummary(GetSummary1(as.numeric(values$protocol3.data$total.explicit.cost)
+                                  , as.numeric(values$protocol3.data$total.implicit.cost)),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -1323,9 +1305,9 @@ shinyServer(function(input, output, session) {
       # Summary 2
       output$protocol3.summary_2 <- renderTable({
         
-        OutputSummary(GetSummary2(as.numeric(protocol3.data$total.cost.medications)
-                                  , as.numeric(protocol3.data$total.cost.professional.time)
-                                  , as.numeric(protocol3.data$total.cost.parent.time )),  c("", ""))
+        OutputSummary(GetSummary2(as.numeric(values$protocol3.data$total.cost.medications)
+                                  , as.numeric(values$protocol3.data$total.cost.professional.time)
+                                  , as.numeric(values$protocol3.data$total.cost.parent.time )),  c("", ""))
         
       },
       include.colnames=FALSE,
@@ -1337,7 +1319,7 @@ shinyServer(function(input, output, session) {
       # Individual Components List
       output$protocol3.summary_3 <- renderTable({
         
-        OutputSummary(protocol3.data$ind.component.summary,  c("By Individual Component", "Cost"))
+        OutputSummary(values$protocol3.data$ind.component.summary,  c("By Individual Component", "Cost"))
         
       }
       , include.rownames=FALSE
@@ -1348,7 +1330,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol3.summary_4 <- renderTable({
         
-        OutputSummary(protocol3.data$grp.component.summary,  c("By Group Component", "Cost"))
+        OutputSummary(values$protocol3.data$grp.component.summary,  c("By Group Component", "Cost"))
         
       }
       
@@ -1359,7 +1341,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol3.summary_5 <- renderTable({
         
-        OutputSummary(protocol3.data$person.summary,  c("By Person", "Cost"))
+        OutputSummary(values$protocol3.data$person.summary,  c("By Person", "Cost"))
         
       }
       
@@ -1371,7 +1353,7 @@ shinyServer(function(input, output, session) {
       
       output$protocol3.summary_6 <- renderTable({
         
-        OutputSummary(protocol3.data$med.component.summary,  c("By Medication", "Cost"))
+        OutputSummary(values$protocol3.data$med.component.summary,  c("By Medication", "Cost"))
         
       }
       , include.rownames=FALSE
@@ -1382,6 +1364,94 @@ shinyServer(function(input, output, session) {
     
   }) # close observe if(input$upload.options.prt3 = "upload.just.saved")
   
+  #############################################
+  # Plots for Protocol Comparison
+  ###############################################
+  
+  observe({
     
+    cost.cat1 = c("Total Explicit Cost","Total Implicit Cost")
+    cost.cat2 = c("Cost Medications","Cost Professional Time", "Costs Parent Time")
+    
+    protocol.names <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$protocol.name, "Protocol 1")
+    protocol.names <- cbind(protocol.names, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$protocol.name, "Protocol 2"))
+    protocol.names <- cbind(protocol.names, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$protocol.name, "Protocol 3"))
+    
+    explicit.costs <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$total.explicit.cost, 0)
+    explicit.costs <- cbind(explicit.costs, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$total.explicit.cost, 0))
+    explicit.costs <- cbind(explicit.costs, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$total.explicit.cost, 0))
+    
+    implicit.costs <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$total.implicit.cost, 0)
+    implicit.costs <- cbind(implicit.costs, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$total.implicit.cost, 0))
+    implicit.costs <- cbind(implicit.costs, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$total.implicit.cost, 0))
+    
+    medication.costs <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$total.cost.medications, 0)
+    medication.costs <- cbind(medication.costs, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$total.cost.medications, 0))
+    medication.costs <- cbind(medication.costs, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$total.cost.medications, 0))
+    
+    professional.costs <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$total.cost.professional.time, 0)
+    professional.costs <- cbind(professional.costs, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$total.cost.professional.time, 0))
+    professional.costs <- cbind(professional.costs, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$total.cost.professional.time, 0))
+    
+    parent.costs <- ifelse(length(values$protocol1.data) > 0, values$protocol1.data$total.cost.parent.time, 0)
+    parent.costs <- cbind(parent.costs, ifelse(length(values$protocol2.data) > 0 , values$protocol2.data$total.cost.parent.time, 0))
+    parent.costs <- cbind(parent.costs, ifelse(length(values$protocol3.data) > 0 , values$protocol3.data$total.cost.parent.time, 0))
+    
+    print(protocol.names) 
+    print(explicit.costs)
+    print(implicit.costs)
+    
+    
+    output$protocols.bars1 <- renderPlot({
+      
+      
+      bar.data <- data.frame(
+        protocol = factor(c(rep(protocol.names[1] , 2), rep(protocol.names[2] , 2), rep(protocol.names[3] , 2))
+                          , levels=protocol.names),
+        cost.type = factor(rep(cost.cat1, 3),  levels = cost.cat1),
+        total.cost = c(explicit.costs[1], implicit.costs[1]
+                       , explicit.costs[2], implicit.costs[2] 
+                       , explicit.costs[3], implicit.costs[3])
+      )
+      
+      
+      print(bar.data)
+      
+      # Stacked bar graph -- simple
+      stacked.bar <- ggplot(data=bar.data, aes(x=protocol, y=total.cost, fill=cost.type)) +
+        geom_bar(stat="identity")
+      
+      
+      print(stacked.bar)
+    })
+    
+    output$protocols.bars2 <- renderPlot({
+      
+      
+      bar.data <- data.frame(
+        protocol = factor(c(rep(protocol.names[1] , 3), rep(protocol.names[2] , 3), rep(protocol.names[3] , 3))
+                          , levels=protocol.names),
+        cost.type = factor(rep(cost.cat2, 3),  levels = cost.cat2),
+        total.cost = c(medication.costs[1], professional.costs[1], parent.costs[1]
+                       , medication.costs[2], professional.costs[2], parent.costs[2]
+                       , medication.costs[3], professional.costs[3], parent.costs[3])
+      )
+      
+      
+      print(bar.data)
+      
+      # Stacked bar graph -- simple
+      stacked.bar <- ggplot(data=bar.data, aes(x=protocol, y=total.cost, fill=cost.type)) +
+        geom_bar(stat="identity")
+      
+      
+      print(stacked.bar)
+    })
+    
+    
+  })
+  
+  
+  
 })
 
