@@ -222,6 +222,29 @@ tabsetPanel(id = "protocol.comparison",
     ), # close tabPanel         
                   
     tabPanel("Plots",
-      tableOutput('contents')
+             fluidRow(
+               column(4, offset= 0.5,
+                      br(),
+                      wellPanel(
+                        plotOutput("protocols.bars1")
+                      )
+               ),
+               column(4, offset= 0.5,
+                      br(),
+                      wellPanel(
+                        
+                        plotOutput("protocols.bars2")
+                      )
+               ),
+               column(4, offset= 0.5,
+                      br(),
+                      wellPanel(
+                        
+                        plotOutput("protocols.bars3")
+                      )
+               )
+               
+             )
+             
     )
-  )
+)
